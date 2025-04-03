@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin 
+  fazendeiro 
+  veterinario 
+  funcionario
+}
+
+enum Health_Status {
+  saudavel
+  doente
+  recuperacao
+  falecido
+}
+
+enum Activity_Level {
+  parado 
+  leve 
+  moderado 
+  intenso
+  extremo 
+}
+
+model User {
+  id         Int     @id @default(autoincrement())
+  name       String  @db.VarChar(250) 
+  email      String  @unique @db.VarChar(250)
+  password   String  @db.VarChar(250) 
+  role       Role
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt 
+
+  // Relação com Animal (Um usuário pode ter vários animais)
+  animals    Animal[]  
+}
+
+model Animal {
+  id            Int           @id @default(autoincrement())
+  name          String        @db.VarChar(100)
+  species       String        @db.VarChar(100)
+  breed         String        @db.VarChar(100)
+  age           Int
+  weight        Float
+  health_status Health_Status 
+  user_id       Int
+  created_at    DateTime      @default(now()) 
+  updated_at    DateTime      @updatedAt
+
+  // Relação com User (Cada animal pertence a um usuário)
+
+  user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  // Relação com Vaccine, Telemetry e Location (1:N)
+  vaccines      Vaccine[]  
+  telemetry     Telemetry[]  
+  locations     Location[]  
+}
+
+model Vaccine {
+  id               Int       @id @default(autoincrement())
+  animal_id        Int
+  name            String     @db.VarChar(100)
+  vaccinarion_date DateTime  @db.Date 
+  next_dose       DateTime?  @db.Date 
+
+  created_at      DateTime   @default(now()) 
+  updated_at      DateTime   @updatedAt
+
+  // Relação com Animal (Cada vacina pertence a um animal)
+  animal          Animal     @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+}
+
+model Telemetry { 
+  id            Int            @id @default(autoincrement())
+  animal_id     Int
+  heartbeat     Int 
+  temperature   Int 
+  activity_level Activity_Level 
+  captured_at   DateTime        @default(now())
+
+  // Relação com Animal (Cada registro de telemetria pertence a um animal)
+  animal        Animal         @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+}
+
+model Location {
+  id          Int       @id @default(autoincrement())
+  animal_id   Int 
+  latitude    Float
+  longitude   Float
+  captured_at DateTime  @default(now())
+
+  // Relação com Animal (Cada registro de localização pertence a um animal)
+  animal      Animal    @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+}
+
+
+// Criar tabelas específicas para cada tipo de usuário (admin,fazendeiro,vet,funcionario). 
+// applyed_by Quero incluir um "aplicado por" para relacionar quem foi o veterinário que aplicou a vacina no animal.

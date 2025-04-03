@@ -1,0 +1,29 @@
+// Importação de bibliotecas necessárias
+const express = require("express"); // Framework para criar servidor web
+const session = require("express-session"); // Gerenciamento de sessões
+const path = require("path"); // Manipulação de caminhos de arquivos
+require('dotenv').config(); // Carregamento de variáveis de ambiente
+
+// Criação da aplicação Express
+const app = express();
+
+// Configuração do motor de template (EJS)
+app.set("view engine", "ejs"); // Definição do motor de template
+app.set("views", path.join(__dirname, "views")); // Definição do diretório de views
+
+// Configuração de middlewares
+app.use(express.urlencoded({ extended: true })); // Parse de dados de formulários
+app.use(express.json()); // Parse de dados JSON
+app.use(express.static(path.join(__dirname, "public"))); // Serviço de arquivos estáticos
+
+// Configuração de sessões
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET, // Chave secreta para criptografia de sessões
+    resave: false, // Não re-salvar sessões se não houver alterações
+    saveUninitialized: true, // Salvar sessões não inicializadas
+  })
+);
+
+// Exportação da aplicação
+module.exports = app;
