@@ -68,8 +68,8 @@ model Vaccine {
   id               Int       @id @default(autoincrement())
   animal_id        Int
   name            String     @db.VarChar(100)
-  vaccinarion_date DateTime  @db.Date 
-  next_dose       DateTime?  @db.Date 
+  vaccination_date String 
+  next_dose       String
 
   created_at      DateTime   @default(now()) 
   updated_at      DateTime   @updatedAt
