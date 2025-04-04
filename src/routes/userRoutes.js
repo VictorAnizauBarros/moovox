@@ -10,7 +10,7 @@ const userController = require('../controllers/userController');
  */
 
 // Retorna todos os usuários
-router.get('/user/all', userController.getAllUsers);
+router.get('/user', userController.getAllUsers);
 
 // Retorna um usuário por ID
 router.get('/user/:id', userController.getUserById);

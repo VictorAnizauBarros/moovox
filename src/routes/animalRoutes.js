@@ -10,7 +10,7 @@ const animalController = require('../controllers/animalController');
  */
 
 // Rota para obter todos os animais
-router.get('/animal/all', animalController.getAllAnimals);
+router.get('/animal', animalController.getAllAnimals);
 
 // Rota para obter um animal por ID
 router.get('/animal/:id', animalController.getAnimalById);
