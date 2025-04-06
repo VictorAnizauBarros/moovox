@@ -53,9 +53,13 @@ const vaccineController = {
   async updateVaccine(req, res) {
     try {
       const id = parseInt(req.params.id);
-      const { animal_id, name, vaccination_date, next_dose } = req.body;
+      
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID inválido." });
+      }
+      const { name, vaccination_date, next_dose } = req.body;
       const vaccine = await vaccineService.updateVaccine(
-        animal_id,
+        id,
         name,
         vaccination_date,
         next_dose

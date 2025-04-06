@@ -27,6 +27,9 @@ const animalController = {
     try {
       // Extrai o ID do animal da requisição
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID inválido." });
+      }
       // Chama o serviço de animal para buscar o animal pelo ID
       const animal = await animalService.getAnimalById(id);
       // Verifica se o animal foi encontrado
@@ -54,6 +57,9 @@ const animalController = {
     try {
       // Extrai os dados do animal da requisição
       const { name, species, breed, age, weight, health_status, user_id } = req.body;
+      if (!name || !species || !breed || !age || !weight || !health_status || !user_id) {
+        return res.status(400).json({ message: "Todos os campos são obrigatórios." });
+      }
       // Chama o serviço de animal para criar o novo animal
       const animal = await animalService.createAnimal(
         name,
@@ -82,6 +88,9 @@ const animalController = {
     try {
       // Extrai o ID do animal da requisição
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID inválido." });
+      }
       // Extrai os dados do animal da requisição
       const { name, species, breed, age, weight, health_status, user_id } = req.body;
       // Chama o serviço de animal para atualizar o animal
@@ -112,6 +121,9 @@ const animalController = {
     try {
       // Extrai o ID do animal da requisição
       const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "ID inválido." });
+      }
       // Chama o serviço de animal para deletar o animal
       await animalService.deleteAnimal(id);
       // Retorna a resposta com o animal deletado

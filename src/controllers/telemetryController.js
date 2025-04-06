@@ -1,6 +1,6 @@
 /**
  * Módulo de controle de telemetria.
- * 
+ *
  * Este módulo é responsável por gerenciar as requisições relacionadas à telemetria,
  * incluindo a criação, leitura, atualização e exclusão de telemetrias.
  */
@@ -9,16 +9,15 @@ const telemetryService = require("../services/telemetryService");
 
 /**
  * Controlador de telemetria.
- * 
+ *
  * Este objeto contém as funções que lidam com as requisições de telemetria.
  */
 const telemetryController = {
-
   /**
    * Obtem todas as telemetrias.
-   * 
+   *
    * Esta função é responsável por obter todas as telemetrias registradas no sistema.
-   * 
+   *
    * @param {Object} req - Requisição HTTP.
    * @param {Object} res - Resposta HTTP.
    */
@@ -42,9 +41,9 @@ const telemetryController = {
 
   /**
    * Obtem uma telemetria por ID.
-   * 
+   *
    * Esta função é responsável por obter uma telemetria específica pelo seu ID.
-   * 
+   *
    * @param {Object} req - Requisição HTTP.
    * @param {Object} res - Resposta HTTP.
    */
@@ -77,8 +76,8 @@ const telemetryController = {
       });
     } catch (error) {
       // Retorna um erro caso ocorra algum problema ao buscar a telemetria.
-      return res.status(404).json({
-        message: "Telemetria não encontrada",
+      return res.status(500).json({
+        message: "Erro ao buscar telemetria.",
         error: error.message,
       });
     }
@@ -86,16 +85,16 @@ const telemetryController = {
 
   /**
    * Cria uma nova telemetria.
-   * 
+   *
    * Esta função é responsável por criar uma nova telemetria no sistema.
-   * 
+   *
    * @param {Object} req - Requisição HTTP.
    * @param {Object} res - Resposta HTTP.
    */
   async createTelemetry(req, res) {
     try {
       // Obtem os dados da telemetria da requisição.
-      const { animal_id, heartbeat, temperature, activity_level, } = req.body;
+      const { animal_id, heartbeat, temperature, activity_level } = req.body;
       // Verifica se os dados são válidos.
       if (!animal_id || !heartbeat || !temperature || !activity_level) {
         // Retorna um erro caso os dados sejam inválidos.
@@ -104,13 +103,29 @@ const telemetryController = {
           error: "Todos os campos são obrigatórios",
         });
       }
+      const animalId = parseInt(animal_id);
+      if (isNaN(animalId)) {
+        return res.status(400).json({
+          message: "animal_id inválido",
+          error: "animal_id deve ser um número",
+        });
+      }
+      if (
+        typeof heartbeat !== "number" ||
+        typeof temperature !== "number" ||
+        typeof activity_level !== "number"
+      ) {
+        return res.status(400).json({
+          message: "Dados inválidos",
+          error: "heartbeat, temperature e activity_level devem ser numéricos",
+        });
+      }
       // Cria a telemetria no serviço de telemetria.
       const telemetry = await telemetryService.createTelemetry(
         animal_id,
         heartbeat,
         temperature,
-        activity_level, 
-        
+        activity_level
       );
       // Retorna a telemetria criada com sucesso.
       return res.status(201).json({
@@ -119,7 +134,7 @@ const telemetryController = {
       });
     } catch (error) {
       // Retorna um erro caso ocorra algum problema ao criar a telemetria.
-      return res.status(400).json({
+      return res.status(500).json({
         message: "Erro ao criar telemetria",
         error: error.message,
       });
@@ -128,9 +143,9 @@ const telemetryController = {
 
   /**
    * Atualiza uma telemetria.
-   * 
+   *
    * Esta função é responsável por atualizar uma telemetria existente no sistema.
-   * 
+   *
    * @param {Object} req - Requisição HTTP.
    * @param {Object} res - Resposta HTTP.
    */
@@ -188,9 +203,9 @@ const telemetryController = {
 
   /**
    * Deleta uma telemetria.
-   * 
+   *
    * Esta função é responsável por deletar uma telemetria existente no sistema.
-   * 
+   *
    * @param {Object} req - Requisição HTTP.
    * @param {Object} res - Resposta HTTP.
    */

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <title>Recuperar Senha - Moovox</title>
+</head>
+<body class="bg-light">
+  <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
+      <h3 class="text-center mb-3">Recuperar Senha</h3>
+      <% if (message) { %>
+        <div class="alert alert-success"><%= message %></div>
+      <% } %>
+      <% if (error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+      <form action="/recuperar-senha" method="POST">
+        <div class="mb-3">
+          <label for="email" class="form-label">Digite seu e-mail cadastrado</label>
+          <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">Enviar link</button>
+        </div>
+        <div class="mt-3 text-center">
+          <a href="/login">Voltar ao login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

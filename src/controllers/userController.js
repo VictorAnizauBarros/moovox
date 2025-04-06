@@ -128,7 +128,13 @@ const userController = {
         });
       }
       // Atualiza o usuário no serviço de usuário
-      const updatedUser = await userService.updateUser(id, name, email, password, role);
+      const updatedUser = await userService.updateUser(
+        id,
+        name,
+        email,
+        password,
+        role
+      );
       // Verifica se o usuário foi atualizado
       if (!updatedUser) {
         // Retorna erro se o usuário não for encontrado
@@ -187,6 +193,65 @@ const userController = {
       // Retorna erro ao deletar usuário
       return res.status(404).json({
         message: "Usuário não encontrado",
+        error: error.message,
+      });
+    }
+  },
+  /**
+   * Realiza o login de um usuário
+   * @param {Object} req - Requisição
+   * @param {Object} res - Resposta
+   */
+  async loginUser(req, res) {
+    try {
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({
+          message: "Erro ao realizar login.",
+          error: "Email e senha são obrigatórios.",
+        });
+      }
+
+      const user = await userService.login(email, password);
+
+      return res.status(200).json({
+        message: "Login realizado com sucesso.",
+        data: user,
+      });
+    } catch (error) {
+      return res.status(401).json({
+        message: "Erro ao realizar login.",
+        error: error.message,
+      });
+    }
+  },
+
+  /**
+   * Valida se um usuário existe por ID
+   * @param {Object} req - Requisição
+   * @param {Object} res - Resposta
+   */
+  async validateUser(req, res) {
+    try {
+      const id = parseInt(req.params.id);
+
+      if (isNaN(id)) {
+        return res.status(400).json({
+          message: "Id inválido.",
+          error: "Id deve ser um número.",
+        });
+      }
+
+      const user = await userService.validateUser(id);
+
+      return res.status(200).json({
+        message: "Usuário válido.",
+        data: user,
+      });
+    } catch (error) {
+      return res.status(404).json({
+        message: "Usuário não encontrado.",
         error: error.message,
       });
     }
