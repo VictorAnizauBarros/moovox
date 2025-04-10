@@ -2,12 +2,12 @@ const userService = require("../services/userService"); // Use seu service de us
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const transporter = require("../config/mailer"); // Criamos isso no passo 3
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require('../config/database');
 require("dotenv").config()
 
 
 const authController = {
+  
   showLoginPage(req, res) {
     res.render("auth/login", { error: null });
   },
@@ -22,7 +22,7 @@ const authController = {
         return res.render("auth/login", { error: "Usuário não encontrado" });
       }
 
-      const senhaCorreta = await bcrypt.compare(senha, user.senha);
+      const senhaCorreta = await bcrypt.compare(senha, user.password);
 
       if (!senhaCorreta) {
         return res.render("auth/login", { error: "Senha incorreta" });
@@ -31,7 +31,7 @@ const authController = {
       // Se estiver usando JWT ou Sessions, aqui é onde você cria a sessão
       req.session.user = {
         id: user.id,
-        nome: user.nome,
+        name: user.name,
         role: user.role,
       };
 
@@ -68,7 +68,7 @@ const authController = {
         from: '"Moovox" <no-reply@moovox.com>',
         to: user.email,
         subject: "Recuperação de Senha",
-        html: `<p>Olá ${user.nome},</p>
+        html: `<p>Olá ${user.name},</p>
                <p>Você solicitou a recuperação de senha. Clique no link abaixo para redefinir sua senha:</p>
                <p><a href="${resetLink}">Redefinir Senha</a></p>
                <p>Este link expira em 1 hora.</p>`,
@@ -113,7 +113,7 @@ const authController = {
         data: { password: hashedPassword },
       });
   
-      res.send("Senha atualizada com sucesso. Você já pode fazer login.");
+      res.redirect("/login");
     } catch (error) {
       console.error("Erro ao redefinir senha:", error);
       res.status(400).send("Token inválido ou expirado.");
