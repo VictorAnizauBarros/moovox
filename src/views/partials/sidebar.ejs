@@ -1,0 +1,90 @@
+<!-- Sidebar com textura -->
+<div class="sidebar text-white p-3 min-vh-100 d-flex flex-column bg-agro-texture" style="width: 280px;">
+  <div class="text-center mb-4">
+    <img src="https://img.freepik.com/fotos-premium/perfil-de-foto-realista-realista-veja-uma-foto-em-uma-fazenda-em-que-um-fazendeiro-esta-cultivando-suas-terras-com-sua-diligencia-e-paciencia-levando-a-uma-colheita-abundante-fotografia-de-alto-brilho-foco-nitido-e-limpo_909774-2041.jpg?w=996" alt="Foto do Usuário" class="rounded-circle mb-2 border border-light" width="80" height="80">
+    <h5 class="fw-bold">Victor Hugo</h5>
+    <span >ADMINISTRADOR</span>
+  </div>
+
+  <ul class="nav nav-pills flex-column mb-auto">
+    <li class="nav-item">
+      <a href="/admin/dashboard" class="nav-link text-white hover-agro">
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      </a>
+    </li>
+    <li>
+      <a href="/admin/users" class="nav-link text-white hover-agro">
+        <i class="bi bi-people me-2"></i> Usuários
+      </a>
+    </li>
+    <li>
+      <a href="/admin/animals" class="nav-link text-white hover-agro">
+        <i class="bi bi-box-seam me-2"></i> Animais
+      </a>
+    </li>
+    <li>
+      <a href="/admin/vaccines" class="nav-link text-white hover-agro">
+        <i class="bi bi-capsule me-2"></i> Vacinas
+      </a>
+    </li>
+    <li>
+      <a href="/admin/profile" class="nav-link text-white hover-agro">
+        <i class="bi bi-person-circle me-2"></i> Meu Perfil
+      </a>
+    </li>
+    <li>
+      <a href="/logout" class="nav-link text-white hover-agro">
+        <i class="bi bi-box-arrow-right me-2"></i> Sair
+      </a>
+    </li>
+  </ul>
+
+  <hr class="border-light">
+  <div class="mt-auto text-center small text-muted">
+    <span>&copy; 2025 - Moovox</span>
+  </div>
+</div>
+
+<!-- CSS com textura -->
+<style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+  .bg-agro-texture {
+    background-color: #3a130d;
+    background-image: url('https://www.transparenttextures.com/patterns/tileable-wood.png');
+    background-repeat: repeat;
+    background-size: auto;
+  }
+
+  .hover-agro:hover {
+    background-color: #556b2f;
+    border-radius: 0.375rem;
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-link {
+    padding: 10px 15px;
+    font-weight: 500;
+  }
+
+  .sidebar h5 {
+    color: #e0d9c8;
+  }
+
+  .sidebar .nav-link i {
+    font-size: 1.2rem;
+  }
+
+  .sidebar img {
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+  }
+
+  .sidebar hr {
+    border-top: 1px solid #ffffff33;
+  }
+
+  body {
+    font-family: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>

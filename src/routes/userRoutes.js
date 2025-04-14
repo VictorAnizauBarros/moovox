@@ -4,6 +4,8 @@ const router = express.Router();
 
 // Importa o controlador de usuários
 const userController = require('../controllers/userController');
+const adminController = require('../controllers/adminController'); 
+
 
 /**
  * Rotas de Usuários
@@ -23,6 +25,10 @@ router.put('/user/:id', userController.updateUser);
 
 // Deleta um usuário por ID
 router.delete('/user/:id', userController.deleteUser);
+
+router.get('/dashboard/admin', adminController.getAdminDashboard); 
+
+
 
 // Exporta o router para ser utilizado em outros módulos
 module.exports = router;

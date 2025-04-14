@@ -1,0 +1,306 @@
+<%- include('../partials/header', { title: "Dashboard - Moovox" }) %>
+<div id="loading-screen">
+  <div id="loading-text">Carregando Moovox...</div>
+</div>
+
+
+
+<div class="d-flex">
+  <%- include('../partials/sidebar') %>
+
+  <main class="flex-grow-1 p-4 bg-leather-main">
+    <h2 class="mb-4 text-white fw-bold">Painel do Administrador</h2>
+
+    <!-- Linha 1: Cards de resumo -->
+    <div class="row mb-4">
+      <div class="col-md-3">
+        <div class="card agro-card shadow-sm border-0 fade-delay-1">
+          <div class="card-body text-white">
+            <h6 class="card-subtitle mb-2"><i class="bi bi-people-fill me-2"></i>Usuários</h6>
+            <p class="display-6 fw-bold">154</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card agro-card-green shadow-sm border-0 fade-delay-2" >
+          <div class="card-body text-white">
+            <h6 class="card-subtitle mb-2"><i class="bi bi-piggy-bank-fill me-2"></i> Animais Registrados</h6>
+            <p class="display-6 fw-bold">87</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card agro-card-yellow shadow-sm border-0 fade-delay-3" >
+          <div class="card-body text-dark">
+            <h6 class="card-subtitle mb-2"><i class="bi bi-capsule-pill me-2"></i>Doses Pendentes</h6>
+            <p class="display-6 fw-bold">12</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card agro-card-red shadow-sm border-0 fade-delay-4">
+          <div class="card-body text-white">
+            <h6 class="card-subtitle mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Alertas de Saúde</h6>
+            <p class="display-6 fw-bold">5</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Linha 2: Últimos usuários e doses -->
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 fade-delay-1">
+          <div class="card-header bg-dark text-white">
+            <i class="bi bi-person-lines-fill me-2"></i>Últimos Usuários Cadastrados
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">João Silva - Veterinário</li>
+            <li class="list-group-item">Maria Souza - Funcionária</li>
+            <li class="list-group-item">Carlos Almeida - Fazendeiro</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card shadow-sm border-0 fade-delay-2">
+          <div class="card-header bg-dark text-white">
+            <i class="bi bi-syringe me-2"></i>Próximas Doses de Vacina
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item">🐄 Mimosa - 18/04/2025</li>
+            <li class="list-group-item">🐄 Branquinha - 20/04/2025</li>
+            <li class="list-group-item">🐄 Pérola - 22/04/2025</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Linha 3: Mapa e Telemetria -->
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 fade-delay-1">
+          <div class="card-header bg-dark text-white">
+            <i class="bi bi-geo-alt-fill me-2"></i>Localização dos Animais
+          </div>
+          <div class="card-body bg-light">
+            <div id="animal-map" style="height: 250px;" class="rounded"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="card shadow-sm border-0 fade-delay-2">
+          <div class="card-header bg-dark text-white">
+            <i class="bi bi-activity me-2"></i>Telemetria do Animal
+          </div>
+          <div class="card-body bg-light">
+            <p><strong>Animal:</strong> Branquinha</p>
+            <p><strong>Temperatura Corporal:</strong> 38.5°C</p>
+            <p><strong>Frequência Cardíaca:</strong> 78 bpm</p>
+            <p><strong>Último Registro:</strong> 13/04/2025 às 15:42</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .bg-leather-main {
+    background-color: #465f0c;
+    background-image: url('https://www.transparenttextures.com/patterns/football-no-lines.png');
+    background-repeat: repeat;
+    background-size: auto;
+    color: #f2f2f2;
+    min-height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  /* Loading */
+  #loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #302617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  #loading-text {
+    color: #f2eee9;
+    font-size: 2rem;
+    font-weight: 600;
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* Sidebar slide */
+  .sidebar {
+    animation: slideInLeft 0.8s ease forwards;
+  }
+
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Cards animados com delay */
+  .card {
+    animation: fadeInUp 0.6s ease-in-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .fade-delay-1 { animation-delay: 0.2s; }
+  .fade-delay-2 { animation-delay: 0.4s; }
+  .fade-delay-3 { animation-delay: 0.6s; }
+  .fade-delay-4 { animation-delay: 0.8s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .agro-card {
+    background-color: #6b4f3f;
+    color: #f9f5f0;
+  }
+
+  .agro-card-green {
+    background-color: #2e7d32;
+    color: #ffffff;
+  }
+
+  .agro-card-yellow {
+    background-color: #ffeb3b;
+    color: #333333;
+  }
+
+  .agro-card-red {
+    background-color: #c62828;
+    color: #ffffff;
+  }
+
+  .card-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .card p {
+    margin: 0;
+  }
+
+  h2 {
+    color: #f2eee9;
+    animation: fadeInUp 0.8s ease-in-out;
+  }
+
+  .card-header {
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
+
+  .list-group-item {
+    font-size: 0.95rem;
+    background-color: #5b442f;
+    color: #f2f2f2;
+    border: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .list-group-item:hover {
+    background-color: #7a5c44;
+  }
+  .pulse-marker {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: #e74c3c;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+  }
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 15px rgba(231, 76, 60, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
+</style>
+<script>
+  window.addEventListener("load", () => {
+    const loading = document.getElementById("loading-screen");
+    if (loading) loading.style.display = "none";
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Centraliza o mapa em uma coordenada fictícia
+    const map = L.map("animal-map").setView([-22.90, -47.06], 13); // Exemplo: Campinas-SP
+
+    // Adiciona o mapa base do OpenStreetMap
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    // Ícone personalizado com pulso
+    const pulseIcon = L.divIcon({
+      className: 'pulse-marker'
+    });
+
+    // Adiciona marcador com ícone pulsante
+    L.marker([-22.90, -47.06], { icon: pulseIcon }).addTo(map);
+  });
+</script>
+
+<%- include('../partials/footer') %>

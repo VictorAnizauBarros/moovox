@@ -150,23 +150,21 @@ const userService = {
   // Método para realizar login
   async login(email, password) {
     try {
-      // Busca do usuário por e-mail
       const user = await prisma.user.findUnique({ where: { email } });
+
       if (!user) {
-        // Tratamento de erro caso o usuário não seja encontrado
         throw new Error("Usuário não encontrado");
       }
-      // Verificação da senha utilizando o bcryptjs
+
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (!isValidPassword) {
-        // Tratamento de erro caso a senha seja inválida
-        throw new Error("Senha inválida");
+        throw new Error("Senha incorreta");
       }
+
       return user;
     } catch (error) {
-      // Tratamento de erro caso ocorra algum problema no login
       console.error(`Erro ao realizar login no service: ${error}`);
-      throw new Error("Erro ao realizar login (service): " + error.message);
+      throw new Error("Erro ao realizar login: " + error.message);
     }
   },
 
@@ -184,6 +182,17 @@ const userService = {
       // Tratamento de erro caso ocorra algum problema na validação
       console.error(`Erro ao validar usuário no service: ${error}`);
       throw new Error("Erro ao validar usuário (service): " + error.message);
+    }
+  },
+  async getUserByEmail(email) {
+    try {
+      const user = await prisma.user.findUnique({ where: { email } });
+      return user;
+    } catch (error) {
+      console.error(`Erro ao buscar usuário pelo email no service: ${error}`);
+      throw new Error(
+        "Erro ao buscar usuário pelo email (service): " + error.message
+      );
     }
   },
 };

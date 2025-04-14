@@ -3,15 +3,16 @@ const router = express.Router();
 const authController = require("../controllers/authController");
 
 // Login
-router.get("/login", authController.showLoginPage);
-router.post("/login", authController.login);
+router.get('/', authController.getLogin); 
+router.get("/login", authController.getLogin);
+router.post("/login", authController.postLogin);
 
-router.get('/redefinir-senha', authController.showResetPasswordForm);
-router.post('/redefinir-senha/:token', authController.resetPassword);
+router.get('/redefinir-senha', authController.getResetPasswordForm);
+router.post('/redefinir-senha/:token', authController.postResetPassword); 
 
 // Recuperar senha
-router.get("/recuperar-senha", authController.showRecoverPage);
-router.post("/recuperar-senha", authController.recoverPassword);
+router.get("/recuperar-senha", authController.getRecoverPassword);
+router.post("/recuperar-senha", authController.postRecoverPassword);
 
 // (Opcional no futuro) Redefinir senha com token
 

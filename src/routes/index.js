@@ -14,7 +14,9 @@ router.use(animalRoutes);
 router.use(vaccineRoutes);
 router.use(telemetryRoutes);
 router.use(locationRoutes);
-router.use('/',authRoutes);
+router.use(authRoutes);
+
+
 
 
 
