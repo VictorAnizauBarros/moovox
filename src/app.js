@@ -16,7 +16,7 @@ app.set("views", path.join(__dirname, "views")); // Definição do diretório de
 // Configuração de middlewares
 app.use(express.urlencoded({ extended: true })); // Parse de dados de formulários
 app.use(express.json()); // Parse de dados JSON
-app.use(express.static(path.join(__dirname, "public"))); // Serviço de arquivos estáticos
+app.use(express.static("src/public")); // Serviço de arquivos estáticos
 
 // Configuração de sessões
 app.use(

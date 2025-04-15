@@ -221,6 +221,16 @@ const authController = {
       });
     }
   },
+  async logout(req, res) {
+    req.session.destroy((err) => {
+      if (err) {
+        console.log("Erro ao encerrar sessão:", err);
+        return res.status(500).send({ message: "Erro ao encerrar sessão" });
+      }
+      res.clearCookie("session-id");
+      res.redirect("/login");
+    });
+  },
 };
 
 // Exporta o controlador para ser usado em rotas
