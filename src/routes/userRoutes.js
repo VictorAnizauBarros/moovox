@@ -27,6 +27,7 @@ router.put('/user/:id', userController.updateUser);
 router.delete('/user/:id', userController.deleteUser);
 
 router.get('/dashboard/admin', adminController.getAdminDashboard); 
+router.get('/admin/users', adminController.getUsersDashboard);
 
 
 

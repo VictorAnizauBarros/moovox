@@ -1,0 +1,324 @@
+<%- include('../partials/header', { title: "Dashboard - Moovox" }) %>
+
+<div id="loading-screen">
+  <div id="loading-text">Carregando Moovox...</div>
+</div>
+
+
+<div class="d-flex">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-grow-1 p-4 bg-leather-main">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Usuários do Sistema</h2>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Novo Usuário</button>
+          </div>
+        
+          <!-- Barra de Pesquisa -->
+          <form class="input-group mb-4" method="GET" action="/admin/users">
+            <input type="text" class="form-control" placeholder="Pesquisar usuários..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+          </form>
+        
+          <!-- Tabela de Usuários -->
+          <div class="table-responsive">
+            <table class="table table-hover align-middle text-center">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>Tipo</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(user => { %>
+                  <tr>
+                    <td><%= user.id %></td>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role %></td>
+                    <td>
+                      <button class="btn btn-warning btn-sm me-2" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= user.id %>">Editar</button>
+                      <form action="/admin/users/<%= user.id %>?_method=DELETE" method="POST" class="d-inline">
+                        <button class="btn btn-danger btn-sm" onclick="return confirm('Deseja realmente excluir este usuário?')">Excluir</button>
+                      </form>
+                    </td>
+                  </tr>
+        
+                  <!-- Modal de Edição -->
+                  <div class="modal fade" id="editUserModal-<%= user.id %>" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <form class="modal-content" action="/admin/users/<%= user.id %>?_method=PUT" method="POST">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Editar Usuário</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="mb-3">
+                            <label class="form-label">Nome</label>
+                            <input type="text" name="name" class="form-control" value="<%= user.name %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label">Tipo</label>
+                            <select name="role" class="form-select" required>
+                              <option <%= user.role === 'admin' ? 'selected' : '' %> value="admin">Administrador</option>
+                              <option <%= user.role === 'veterinario' ? 'selected' : '' %> value="veterinario">Veterinário</option>
+                              <option <%= user.role === 'fazendeiro' ? 'selected' : '' %> value="fazendeiro">Fazendeiro</option>
+                              <option <%= user.role === 'funcionario' ? 'selected' : '' %> value="funcionario">Funcionário</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-primary">Salvar</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+
+    </main>
+
+
+
+<!-- Modal de Criação -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content" action="/admin/users" method="POST">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastrar Novo Usuário</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Nome</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Senha</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Tipo</label>
+          <select name="role" class="form-select" required>
+            <option value="admin">Administrador</option>
+            <option value="veterinario">Veterinário</option>
+            <option value="fazendeiro">Fazendeiro</option>
+            <option value="funcionario">Funcionário</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success">Cadastrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</div>
+
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+  }
+
+  .bg-leather-main {
+    background-color: #465f0c;
+    background-image: url('https://www.transparenttextures.com/patterns/football-no-lines.png');
+    background-repeat: repeat;
+    background-size: auto;
+    color: #f2f2f2;
+    min-height: 100vh;
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  /* Loading */
+  #loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #302617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  #loading-text {
+    color: #f2eee9;
+    font-size: 2rem;
+    font-weight: 600;
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.4;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  /* Sidebar slide */
+  .sidebar {
+    animation: slideInLeft 0.8s ease forwards;
+  }
+
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /* Cards animados com delay */
+  .card {
+    animation: fadeInUp 0.6s ease-in-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .fade-delay-1 { animation-delay: 0.2s; }
+  .fade-delay-2 { animation-delay: 0.4s; }
+  .fade-delay-3 { animation-delay: 0.6s; }
+  .fade-delay-4 { animation-delay: 0.8s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .agro-card {
+    background-color: #6b4f3f;
+    color: #f9f5f0;
+  }
+
+  .agro-card-green {
+    background-color: #2e7d32;
+    color: #ffffff;
+  }
+
+  .agro-card-yellow {
+    background-color: #ffeb3b;
+    color: #333333;
+  }
+
+  .agro-card-red {
+    background-color: #c62828;
+    color: #ffffff;
+  }
+
+  .card-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .card p {
+    margin: 0;
+  }
+
+  h2 {
+    color: #f2eee9;
+    animation: fadeInUp 0.8s ease-in-out;
+  }
+
+  .card-header {
+    font-weight: 600;
+    font-size: 1rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
+
+  .list-group-item {
+    font-size: 0.95rem;
+    background-color: #5b442f;
+    color: #f2f2f2;
+    border: none;
+    transition: background-color 0.2s ease;
+  }
+
+  .list-group-item:hover {
+    background-color: #7a5c44;
+  }
+  .pulse-marker {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: #e74c3c;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+  }
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 15px rgba(231, 76, 60, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
+</style>
+<script>
+  window.addEventListener("load", () => {
+    const loading = document.getElementById("loading-screen");
+    if (loading) loading.style.display = "none";
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Centraliza o mapa em uma coordenada fictícia
+    const map = L.map("animal-map").setView([-22.90, -47.06], 13); // Exemplo: Campinas-SP
+
+    // Adiciona o mapa base do OpenStreetMap
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    // Ícone personalizado com pulso
+    const pulseIcon = L.divIcon({
+      className: 'pulse-marker'
+    });
+
+    // Adiciona marcador com ícone pulsante
+    L.marker([-22.90, -47.06], { icon: pulseIcon }).addTo(map);
+  });
+</script>
+
+
+
+
+<%- include('../partials/footer') %>
