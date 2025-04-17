@@ -87,10 +87,8 @@ const userController = {
       // Cria o usuário no serviço de usuário
       const user = await userService.createUser(name, email, password, role);
       // Retorna o usuário criado com sucesso
-      return res.status(201).json({
-        message: "Usuário criado com sucesso",
-        data: user,
-      });
+      return res
+      .redirect('/admin/users'); 
     } catch (error) {
       // Retorna erro ao criar usuário
       return res.status(400).json({
@@ -118,9 +116,9 @@ const userController = {
         });
       }
       // Extrai os dados do corpo da requisição
-      const { name, email, password, role } = req.body;
+      const { name, email, role } = req.body;
       // Verifica se pelo menos um campo é obrigatório
-      if (!name && !email && !password && !role) {
+      if (!name && !email && !role) {
         // Retorna erro se nenhum campo for informado
         return res.status(400).json({
           message: "Erro ao atualizar usuário.",
@@ -132,7 +130,6 @@ const userController = {
         id,
         name,
         email,
-        password,
         role
       );
       // Verifica se o usuário foi atualizado
@@ -144,10 +141,7 @@ const userController = {
         });
       }
       // Retorna o usuário atualizado com sucesso
-      return res.status(200).json({
-        message: "Usuário atualizado com sucesso",
-        data: updatedUser,
-      });
+      return res.redirect('/admin/users');
     } catch (error) {
       // Retorna erro ao atualizar usuário
       return res.status(404).json({
@@ -185,10 +179,7 @@ const userController = {
         });
       }
       // Retorna o usuário deletado com sucesso
-      return res.status(200).json({
-        message: "Usuário deletado com sucesso",
-        data: deletedUser,
-      });
+      return res.redirect('/admin/users'); 
     } catch (error) {
       // Retorna erro ao deletar usuário
       return res.status(404).json({

@@ -66,7 +66,7 @@ const userService = {
   },
 
   // Método para atualizar um usuário
-  async updateUser(id, name, email, password, role) {
+  async updateUser(id, name, email,role) {
     try {
       // Busca do usuário a ser atualizado
       const user = await prisma.user.findUnique({ where: { id } });
@@ -74,15 +74,13 @@ const userService = {
         // Tratamento de erro caso o usuário não seja encontrado
         throw new Error("Usuário não encontrado");
       }
-      // Criptografia da senha utilizando o bcryptjs
-      const hashedPassword = await bcrypt.hash(password, 8);
+  
       // Utilização do Prisma para atualizar o usuário no banco de dados
       const updatedUser = await prisma.user.update({
-        where: { id },
+        where: { id: id},
         data: {
           name,
           email,
-          password: hashedPassword,
           role,
         },
       });

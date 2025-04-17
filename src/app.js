@@ -3,6 +3,7 @@ const express = require("express"); // Framework para criar servidor web
 const session = require("express-session"); // Gerenciamento de sessões
 const path = require("path"); // Manipulação de caminhos de arquivos
 require('dotenv').config(); // Carregamento de variáveis de ambiente
+const methodOverride = require('method-override');
 // Importação das rotas da aplicação
 const routes = require('./routes/index');
 
@@ -37,6 +38,8 @@ app.use((req, res, next) => {
   // Chama o próximo middleware na cadeia de execução
   next();
 });
+
+app.use(methodOverride('_method'));
 
 // Registra as rotas da aplicação no servidor Express
 app.use(routes);
