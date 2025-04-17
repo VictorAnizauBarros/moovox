@@ -28,6 +28,7 @@ router.delete('/user/:id', userController.deleteUser);
 
 router.get('/dashboard/admin', adminController.getAdminDashboard); 
 router.get('/admin/users', adminController.getUsersDashboard);
+router.get('/admin/animals',adminController.getAnimalsDashboard); 
 
 
 

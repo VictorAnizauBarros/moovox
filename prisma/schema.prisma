@@ -37,9 +37,6 @@ model User {
   role       Role
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt 
-
-  // Relação com Animal (Um usuário pode ter vários animais)
-  animals    Animal[]  
 }
 
 model Animal {
@@ -50,13 +47,9 @@ model Animal {
   age           Int
   weight        Float
   health_status Health_Status 
-  user_id       Int
   created_at    DateTime      @default(now()) 
   updated_at    DateTime      @updatedAt
 
-  // Relação com User (Cada animal pertence a um usuário)
-
-  user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   // Relação com Vaccine, Telemetry e Location (1:N)
   vaccines      Vaccine[]  

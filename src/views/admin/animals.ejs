@@ -1,0 +1,192 @@
+<%- include('../partials/header', { title: "Animais - Moovox" }) %>
+<link rel="stylesheet" href="/css/users.css">
+
+<div id="loading-screen">
+  <div id="loading-text">Carregando Moovox...</div>
+</div>
+
+
+<div class="d-flex">
+    <%- include('../partials/sidebar') %>
+    <main class="flex-grow-1 p-4 bg-leather-main">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Animais</h2>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Novo Animal</button>
+          </div>
+        
+          <!-- Barra de Pesquisa -->
+          <form class="input-group mb-4" method="GET" action="/admin/users">
+            <input type="text" class="form-control fade-delay-1" placeholder="Pesquisar usuários..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+          </form>
+        
+          <!-- Tabela de Animais -->
+<div class="table-responsive fade-delay-2">
+  <table class="table table-hover align-middle text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Especie</th>
+        <th>Raça</th>
+        <th>Idade</th>
+        <th>Peso</th>
+        <th>Saúde</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% animals.forEach(animal => { %>
+        <tr>
+          <td><%= animal.id %></td>
+          <td><%= animal.name %></td>
+          <td><%= animal.species %></td>
+          <td><%= animal.breed %></td>
+          <td><%= animal.age %></td>
+          <td><%= animal.weight %></td>
+          <td><%= animal.health_status %></td>
+          <td>
+            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= animal.id %>">
+              Editar
+            </button>
+
+<!-- Botão para abrir o modal de confirmação -->
+<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= animal.id %>">
+  Excluir
+</button>
+
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<!-- TODOS os modais vêm DEPOIS da tabela -->
+<% animals.forEach(animal => { %>
+  <div class="modal fade" id="editUserModal-<%= animal.id %>" tabindex="-1" aria-labelledby="editUserModalLabel-<%= animal.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content shadow-lg rounded-4 border-0" action="/animal/<%= animal.id %>?_method=PUT" method="POST" style="background: #f9fdfb;">
+        <div class="modal-header border-0" style="background-color: #2e7d32; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="modal-title" id="editUserModalLabel-<%= animal.id %>">Editar Animal</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Nome</label>
+            <input type="text" name="name" class="form-control  border-success-subtle" value="<%= animal.name %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Especie</label>
+            <input type="text" name="species" class="form-control  border-success-subtle" value="<%= animal.species %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Raça</label>
+            <input type="text" name="breed" class="form-control  border-success-subtle" value="<%= animal.breed %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Idade</label>
+            <input type="number" name="age" class="form-control  border-success-subtle" value="<%= animal.age %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Peso</label>
+            <input type="text" name="weight" class="form-control  border-success-subtle" value="<%= animal.weight %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Saúde</label>
+            <select name="health_status" class="form-select  border-success-subtle" required>
+              <option value="saudavel" <%= animal.health_status === 'saudavel' ? 'selected' : '' %>>Saudavel</option>
+              <option value="doente" <%= animal.health_status === 'doente' ? 'selected' : '' %>>Doente</option>
+              <option value="recuperacao" <%= animal.health_status === 'recuperacao' ? 'selected' : '' %>>Em recuperação</option>
+              <option value="falecido" <%= animal.health_status === 'falecido' ? 'selected' : '' %>>Falecido</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% }) %>
+
+
+    </main>
+
+
+
+<!-- Modal de Criação -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content shadow-lg rounded-4 border-0" action="/animal" method="POST" style="background: #f9fdfb;">
+      <div class="modal-header border-0" style="background-color: #2e7d32; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+        <h5 class="modal-title" id="createUserModalLabel">Cadastrar Novo Animal</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Nome</label>
+          <input type="text" name="name" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Especie</label>
+          <input type="text" name="species" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Raça</label>
+          <input type="text" name="breed" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Idade</label>
+          <input type="number" name="age" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Peso</label>
+          <input type="text" name="weight" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Saúde</label>
+          <select name="health_status" class="form-select border-success-subtle" required>
+            <option value="saudavel">Saudavel</option>
+            <option value="doente">Doente</option>
+            <option value="recuperacao">Em recuperacao</option>
+            <option value="falecido">Falecido</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer border-0 px-4 pb-4">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">Cadastrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<% animals.forEach(animal => { %>
+  <!-- Modal de confirmação de exclusão -->
+  <div class="modal fade" id="confirmDeleteModal-<%= animal.id %>" tabindex="-1" aria-labelledby="confirmDeleteLabel-<%= animal.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content shadow-lg rounded-4 border-0" action="/animal/<%= animal.id %>?_method=DELETE" method="POST" style="background: #fefefe;">
+        <div class="modal-header border-0" style="background-color: #c62828; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="modal-title" id="confirmDeleteLabel-<%= animal.id %>">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+          <p class="mb-0">Tem certeza que deseja excluir o usuário <strong><%= animal.name %></strong>?</p>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Excluir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% }) %>
+
+
+<script src="/js/dashboard.js"></script>
+
+
+
+<%- include('../partials/footer') %>

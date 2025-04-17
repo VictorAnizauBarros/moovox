@@ -41,10 +41,9 @@ const animalService = {
     age,
     weight,
     health_status,
-    user_id
   ) {
     // Verifica se todos os campos foram fornecidos
-    if (!name || !species || !breed || !age || !weight || !health_status || !user_id) {
+    if (!name || !species || !breed || !age || !weight || !health_status) {
       // Lança um erro se algum campo não foi fornecido
       throw new Error("Todos os campos são obrigatórios");
     }
@@ -58,7 +57,6 @@ const animalService = {
           age,
           weight,
           health_status,
-          user_id,
         },
       });
       return newAnimal;
@@ -78,7 +76,6 @@ const animalService = {
     age,
     weight,
     health_status,
-    user_id
   ) {
     // Verifica se o ID foi fornecido
     if (!id) {
@@ -95,8 +92,7 @@ const animalService = {
           breed,
           age,
           weight,
-          health_status,
-          user_id,
+          health_status
         },
       });
       return updatedAnimal;
