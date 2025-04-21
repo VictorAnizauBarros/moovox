@@ -1,5 +1,6 @@
 const userService = require("../services/userService");
 const animalsService = require("../services/animalService");
+const vaccinesService = require("../services/vaccineService"); 
 const adminController = {
   async getAdminDashboard(req, res) {
     try {
@@ -27,6 +28,17 @@ const adminController = {
       res.status(500).send({ message: "Internal Server Error" });
     }
   },
+  async getVaccineDashboard(req,res){
+    try {
+      const vaccines = await vaccinesService.getAllVaccines();
+      res.render("admin/vaccines", {vaccines});
+      
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ message: "Internal Server Error" });
+      
+    }
+  }
 };
 
 module.exports = adminController;

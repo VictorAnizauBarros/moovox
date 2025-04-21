@@ -6,71 +6,107 @@ const vaccineService = {
       const vaccines = await prisma.vaccine.findMany();
       return vaccines;
     } catch (error) {
-      console.error(`Erro ao realizar a consulta de vacinas: ${error}`);
+      console.log(
+        "Erro ao buscar todas as vacinas (service): " + error.message
+      );
       throw new Error(
-        "Erro ao realizar a consulta de vacinas:" + error.message
+        "Erro ao buscar todas as vacinas (service): " + error.message
       );
     }
   },
   async getVaccineById(id) {
     try {
-      const vaccine = await prisma.vaccine.findUnique({ where: { id } });
+      if (!id) {
+        throw new Error("Id da vacina é obrigatório");
+      }
+      const vaccine = await prisma.vaccine.findUnique({ where: { id: id } });
       return vaccine;
     } catch (error) {
-      console.error(`Erro ao realizar a consulta de vacina por id: ${error}`);
+      console.log("Erro ao buscar vacina por id (service): " + error.message);
       throw new Error(
-        "Erro ao realizar a consulta de vacina por id:" + error.message
+        "Erro ao buscar vacina por id (service): " + error.message
       );
     }
   },
-  async createVaccine(animal_id, name, vaccination_date, next_dose) {
+  async createVaccine(
+    name,
+    target_disease,
+    type,
+    manufacturer,
+    batch,
+    expiration_date,
+    required_doses,
+    dosing_interval,
+    notes
+  ) {
     try {
-      const newVaccine = await prisma.$transaction(async (prisma) => {
-        const vaccine = await prisma.vaccine.create({
-          data: {
-            animal_id,
-            name,
-            vaccination_date,
-            next_dose,
-          },
-        });
-        return vaccine;
-      });
-      return newVaccine;
-    } catch (error) {
-      console.error(`Erro ao criar uma vacina: ${error}`);
-      throw new Error("Erro ao criar uma vacina:" + error.message);
-    }
-  },
-  async updateVaccine(id, name, vaccination_date, next_dose) {
-    try {
-      const updatedVaccine = await prisma.vaccine.update({
-        where: { id },
+      const vaccine = await prisma.vaccine.create({
         data: {
-          name,
-          vaccination_date,
-          next_dose,
+          name: name,
+          target_disease: target_disease,
+          type: type,
+          manufacturer: manufacturer,
+          batch: batch,
+          expiration_date: expiration_date,
+          required_doses: required_doses,
+          dosing_interval: dosing_interval,
+          notes: notes,
         },
       });
-      return updatedVaccine;
+      return vaccine;
     } catch (error) {
-        console.error(`Erro ao atualizar uma vacina: ${error}`);
-        throw new Error("Erro ao atualizar uma vacina:" + error.message);
-
+      console.log("Erro ao criar vacina (service): " + error.message);
+      throw new Error("Erro ao criar vacina (service): " + error.message);
+    }
+  },
+  async updateVaccine(
+    id,
+    name,
+    target_disease,
+    type,
+    manufacturer,
+    batch,
+    expiration_date,
+    required_doses,
+    dosing_interval,
+    notes
+  ) {
+    try {
+      const vaccine = await prisma.vaccine.update({
+        where: {
+          id: id,
+        },
+        data: {
+          name: name,
+          target_disease: target_disease,
+          type: type,
+          manufacturer: manufacturer,
+          batch: batch,
+          expiration_date: expiration_date,
+          required_doses: required_doses,
+          dosing_interval: dosing_interval,
+          notes: notes,
+        },
+      });
+      return vaccine;
+    } catch (error) {
+      console.error("Erro ao atualizar vacina (service): " + error.message);
+      throw new Error("Erro ao atulizar vacina (service): " + error.message);
     }
   },
   async deleteVaccine(id) {
     try {
-        const deletedVaccine = await prisma.vaccine.delete({ where: {id:id}});
-        return deletedVaccine; 
-        
+      const vaccine = await prisma.vaccine.delete({
+        where: {
+          id: id,
+        },
+      });
+      return vaccine;
     } catch (error) {
-        console.error(`Erro ao deletar uma vacina: ${error}`);
-        throw new Error("Erro ao deletar uma vacina:" + error.message);
-        
+      console.error("Erro ao deletar vacina (service): " + error.message);
+      throw new Error("Erro ao deletar vacina (service): " + error.message);
     }
-  }, 
-
+  },
 };
 
 module.exports = vaccineService; 

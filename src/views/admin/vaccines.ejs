@@ -1,0 +1,216 @@
+<%- include('../partials/header', { title: "Vacinas - Moovox" }) %>
+<link rel="stylesheet" href="/css/users.css">
+
+<div id="loading-screen">
+  <div id="loading-text">Carregando Moovox...</div>
+</div>
+
+
+<div class="d-flex">
+  <%- include('../partials/sidebar') %>
+
+  <main class="flex-grow-1 p-4 bg-leather-main">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Vacinas</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Nova Vacina</button>
+    </div>
+
+              <!-- Barra de Pesquisa -->
+              <form class="input-group mb-4" method="GET" action="/admin/users">
+                <input type="text" class="form-control fade-delay-1" placeholder="Pesquisar usuários..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+                <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+              </form>
+
+
+    <!-- Tabela de Animais -->
+<div class="table-responsive fade-delay-2">
+  <table class="table table-hover align-middle text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Doença Combatida</th>
+        <th>Validade</th>
+        <th>Tipo de Vacina</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% vaccines.forEach(vaccine => { %>
+        <tr>
+          <td><%= vaccine.id %></td>
+          <td><%= vaccine.name %></td>
+          <td><%= vaccine.target_disease %></td>
+          <td><%= vaccine.expiration_date %></td>
+          <td><%= vaccine.type %></td>
+          <td>
+            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= vaccine.id %>">
+              Editar
+            </button>
+
+<!-- Botão para abrir o modal de confirmação -->
+<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= vaccine.id %>">
+  Excluir
+</button>
+
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<% vaccines.forEach(vaccine => { %>
+  <div class="modal fade" id="editUserModal-<%= vaccine.id %>" tabindex="-1" aria-labelledby="editUserModalLabel-<%= vaccine.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content shadow-lg rounded-4 border-0" action="/vaccine/<%= vaccine.id %>?_method=PUT" method="POST" style="background: #f9fdfb;">
+        <div class="modal-header border-0" style="background-color: #2e7d32; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="modal-title" id="editUserModalLabel-<%= vaccine.id %>">Editar Vacina</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Nome</label>
+            <input type="text" name="name" class="form-control  border-success-subtle" value="<%= vaccine.name %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Doença Combatida</label>
+            <input type="text" name="target_disease" class="form-control  border-success-subtle" value="<%= vaccine.target_disease %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Fabricante</label>
+            <input type="text" name="manufacturer" class="form-control  border-success-subtle" value="<%= vaccine.manufacturer %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Lote</label>
+            <input type="text" name="batch" class="form-control  border-success-subtle" value="<%= vaccine.batch %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Validade</label>
+            <input type="text" name="expiration_date" class="form-control  border-success-subtle" value="<%= vaccine.expiration_date%>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Doses necessárias</label>
+            <input type="number" name="required_doses" class="form-control  border-success-subtle" value="<%= vaccine.required_doses%>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Intervalo entre Doses (em dias)</label>
+            <input type="number" name="dosing_interval" class="form-control  border-success-subtle" value="<%= vaccine.dosing_interval%>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Observações</label>
+            <input type="text" name="notes" class="form-control  border-success-subtle" value="<%= vaccine.notes%>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Tipo</label>
+            <select name="type" class="form-select  border-success-subtle" required>
+              <option value="injetavel" <%= vaccine.type === 'injetavel' ? 'selected' : '' %>>Injetavel</option>
+              <option value="oral" <%= vaccine.type === 'oral' ? 'selected' : '' %>>Oral</option>
+              <option value="intranasal" <%= vaccine.type === 'intranasal' ? 'selected' : '' %>>Intranasal</option>
+              <option value="transdermica" <%= vaccine.type === 'transdermica' ? 'selected' : '' %>>Transdermica</option>
+              <option value="intramamaria" <%= vaccine.type === 'intramamaria' ? 'selected' : '' %>>Intramamaria</option>
+              <option value="spray" <%= vaccine.type === 'spray' ? 'selected' : '' %>>Spray</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% }) %>
+
+
+  </main>
+
+  <!-- Modal de Criação -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form class="modal-content shadow-lg rounded-4 border-0" action="/vaccine" method="POST" style="background: #f9fdfb;">
+      <div class="modal-header border-0" style="background-color: #2e7d32; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+        <h5 class="modal-title" id="createUserModalLabel">Cadastrar Nova Vacina</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body px-4 py-3">
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Nome</label>
+          <input type="text" name="name" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Doença Alvo</label>
+          <input type="text" name="target_disease" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Fabricante</label>
+          <input type="text" name="manufacturer" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Lote</label>
+          <input type="text" name="batch" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Validade</label>
+          <input type="text" name="expiration_date" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Doses necessárias</label>
+          <input type="number" name="required_doses" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Intervalo entre Doses (em dias)</label>
+          <input type="number" name="dosing_interval" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Observações</label>
+          <input type="text" name="notes" class="form-control border-success-subtle" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-semibold text-success">Tipo</label>
+          <select name="type" class="form-select border-success-subtle" required>
+            <option value="injetavel">Injetavel</option>
+            <option value="intranasal">Intranasal</option>
+            <option value="transdermica">Transdermica</option>
+            <option value="intramamaria">Intramamaria</option>
+            <option value="spray">Spray</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer border-0 px-4 pb-4">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">Cadastrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+</div>
+
+<% vaccines.forEach(vaccine => { %>
+  <!-- Modal de confirmação de exclusão -->
+  <div class="modal fade" id="confirmDeleteModal-<%= vaccine.id %>" tabindex="-1" aria-labelledby="confirmDeleteLabel-<%= vaccine.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content shadow-lg rounded-4 border-0" action="/vaccine/<%= vaccine.id %>?_method=DELETE" method="POST" style="background: #fefefe;">
+        <div class="modal-header border-0" style="background-color: #c62828; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="modal-title" id="confirmDeleteLabel-<%= vaccine.id %>">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+          <p class="mb-0">Tem certeza que deseja excluir a vacina <strong><%= vaccine.name %></strong>?</p>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Excluir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% }) %>
+
+
+
+<script src="/js/dashboard.js"></script>
+<%- include('../partials/footer') %>
+

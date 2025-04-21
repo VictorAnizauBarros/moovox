@@ -57,6 +57,13 @@ const userService = {
           role,
         },
       });
+      if(role === "veterinario"){
+        const veterinario = await prisma.veterinario.create({
+          data: {
+            user_id: newUser.id,
+          }, 
+        }); 
+      }
       return newUser;
     } catch (error) {
       // Tratamento de erro caso ocorra algum problema na criação

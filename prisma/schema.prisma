@@ -8,9 +8,9 @@ datasource db {
 }
 
 enum Role {
-  admin 
-  fazendeiro 
-  veterinario 
+  admin
+  fazendeiro
+  veterinario
   funcionario
 }
 
@@ -22,21 +22,48 @@ enum Health_Status {
 }
 
 enum Activity_Level {
-  parado 
-  leve 
-  moderado 
+  parado
+  leve
+  moderado
   intenso
-  extremo 
+  extremo
+}
+
+enum Tipo_Vacina {
+  injetavel
+  oral
+  intranasal
+  transdermica
+  intramamaria
+  spray
+}
+
+enum Status_Aplicacao {
+  pendente
+  aplicada
+  atrasada
 }
 
 model User {
-  id         Int     @id @default(autoincrement())
-  name       String  @db.VarChar(250) 
-  email      String  @unique @db.VarChar(250)
-  password   String  @db.VarChar(250) 
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(250)
+  email      String   @unique @db.VarChar(250)
+  password   String   @db.VarChar(250)
   role       Role
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt 
+  updated_at DateTime @updatedAt
+
+  // Relações: 
+  veterinario Veterinario?
+}
+
+model Veterinario {
+  id      Int @id @default(autoincrement())
+  user_id Int @unique
+
+  // Relações: 
+  user        User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Application Application[]
 }
 
 model Animal {
@@ -46,54 +73,69 @@ model Animal {
   breed         String        @db.VarChar(100)
   age           Int
   weight        Float
-  health_status Health_Status 
-  created_at    DateTime      @default(now()) 
+  health_status Health_Status
+  created_at    DateTime      @default(now())
   updated_at    DateTime      @updatedAt
 
-
-  // Relação com Vaccine, Telemetry e Location (1:N)
-  vaccines      Vaccine[]  
-  telemetry     Telemetry[]  
-  locations     Location[]  
+  // Relação com Vaccine, Telemetry e Location (1:N) 
+  telemetry   Telemetry[]
+  locations   Location[]
+  Application Application[]
 }
 
 model Vaccine {
-  id               Int       @id @default(autoincrement())
-  animal_id        Int
-  name            String     @db.VarChar(100)
-  vaccination_date String 
-  next_dose       String
+  id              Int           @id @default(autoincrement())
+  name            String
+  target_disease  String
+  type            Tipo_Vacina
+  manufacturer    String
+  batch           String
+  expiration_date String
+  required_doses  Int
+  dosing_interval Int           @default(0)
+  notes           String        @default("Não há observações.")
 
-  created_at      DateTime   @default(now()) 
-  updated_at      DateTime   @updatedAt
-
-  // Relação com Animal (Cada vacina pertence a um animal)
-  animal          Animal     @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+  // Relações: 
+  Application     Application[]
 }
 
-model Telemetry { 
-  id            Int            @id @default(autoincrement())
-  animal_id     Int
-  heartbeat     Int 
-  temperature   Int 
-  activity_level Activity_Level 
-  captured_at   DateTime        @default(now())
+model Application {
+  id                    Int              @id @default(autoincrement())
+  animal_id             Int
+  vaccine_id            Int
+  veterinario_id        Int
+  application_date      String
+  next_application_date String?
+  status                Status_Aplicacao
+
+  // Relações 
+  animal      Animal      @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+  vaccine     Vaccine     @relation(fields: [vaccine_id], references: [id], onDelete: Cascade)
+  veterinario Veterinario @relation(fields: [veterinario_id], references: [id], onDelete: Cascade)
+}
+
+model Telemetry {
+  id             Int            @id @default(autoincrement())
+  animal_id      Int
+  heartbeat      Int
+  temperature    Int
+  activity_level Activity_Level
+  captured_at    DateTime       @default(now())
 
   // Relação com Animal (Cada registro de telemetria pertence a um animal)
-  animal        Animal         @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+  animal Animal @relation(fields: [animal_id], references: [id], onDelete: Cascade)
 }
 
 model Location {
-  id          Int       @id @default(autoincrement())
-  animal_id   Int 
+  id          Int      @id @default(autoincrement())
+  animal_id   Int
   latitude    Float
   longitude   Float
-  captured_at DateTime  @default(now())
+  captured_at DateTime @default(now())
 
   // Relação com Animal (Cada registro de localização pertence a um animal)
-  animal      Animal    @relation(fields: [animal_id], references: [id], onDelete: Cascade)
+  animal Animal @relation(fields: [animal_id], references: [id], onDelete: Cascade)
 }
-
 
 // Criar tabelas específicas para cada tipo de usuário (admin,fazendeiro,vet,funcionario). 
 // applyed_by Quero incluir um "aplicado por" para relacionar quem foi o veterinário que aplicou a vacina no animal.
