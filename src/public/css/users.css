@@ -183,3 +183,22 @@
     background-color: #584bd6;
     border-color: #584bd6;
   }
+
+  /* Aumenta a altura mínima das células do mês */
+.fc-daygrid-day-frame {
+  min-height: 100px; /* Aumente conforme necessário */
+  overflow: visible !important;
+}
+
+/* Permite que o texto apareça sem cortar */
+.fc-event-title,
+.fc-event-time {
+  white-space: normal;
+  overflow-wrap: break-word;
+  font-size: 0.85rem;
+}
+
+.fc-daygrid-event {
+  font-size: 0.75rem;
+  padding: 2px;
+}

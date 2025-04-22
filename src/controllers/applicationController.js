@@ -27,16 +27,18 @@ const applicationController = {
         vaccine_id,
         veterinario_id,
         application_date,
+        next_application_date,
         status,
       } = req.body;
       const application = await applicationService.createApplication(
-        animal_id,
-        vaccine_id,
-        veterinario_id,
+        parseInt(animal_id),
+        parseInt(vaccine_id),
+        parseInt(veterinario_id),
         application_date,
+        next_application_date || null,
         status,
       );
-      res.json(application);
+      res.redirect('/admin/applications');
     } catch (error) {
       console.error(error);
       res.status(400).json({ message: "Invalid application data" });
@@ -50,17 +52,19 @@ const applicationController = {
         vaccine_id,
         veterinario_id,
         application_date,
+        next_application_date,
         status,
       } = req.body;
       const application = await applicationService.updateApplication(
         id,
-        animal_id,
-        vaccine_id,
-        veterinario_id,
+        parseInt(animal_id),
+        parseInt(vaccine_id),
+        parseInt(veterinario_id),
         application_date,
+        next_application_date|| null,
         status
       );
-      res.json(application);
+      res.redirect('/admin/applications');
     } catch (error) {
       console.error(error);
       res.status(404).json({ message: "Application not found" });
@@ -70,7 +74,7 @@ const applicationController = {
     try {
         const id = parseInt(req.params.id);
         await applicationService.deleteApplication(id);
-        res.json({ message: "Application deleted successfully" });
+        res.redirect('/admin/applications');
         
     } catch (error) {
         console.error(error);

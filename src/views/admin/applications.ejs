@@ -1,0 +1,347 @@
+<%- include('../partials/header', { title: "Aplicações - Moovox" }) %>
+<link rel="stylesheet" href="/css/users.css">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+
+<div id="loading-screen">
+  <div id="loading-text">Carregando Moovox...</div>
+</div>
+
+<div class="d-flex">
+  <%- include('../partials/sidebar') %>
+
+  <main class="flex-grow-1 p-4 bg-leather-main">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2>Aplicações</h2>
+      <div>
+        <button class="btn btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#calendarModal">📅 Ver Calendário</button>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Nova Aplicação</button>
+      </div>
+    </div>
+
+    
+    <!-- 🔽 Histórico de Vacinação com Filtros -->
+    <div class="card mb-4">
+      <div class="card-header bg-success text-white">
+        <strong>📄 Histórico de Vacinação</strong>
+      </div>
+      <div class="card-body bg-white shadow-sm rounded">
+        <form method="GET" action="/admin/applications" class="row g-3 mb-3">
+          <div class="col-md-3">
+            <label class="form-label">Animal</label>
+            <select name="animal" class="form-select">
+              <option value="">Todos</option>
+              <% animals.forEach(animal => { %>
+                <option value="<%= animal.id %>" <%= (query.animal == animal.id) ? 'selected' : '' %>><%= animal.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Vacina</label>
+            <select name="vaccine" class="form-select">
+              <option value="">Todas</option>
+              <% vaccines.forEach(vaccine => { %>
+                <option value="<%= vaccine.id %>" <%= (query.vaccine == vaccine.id) ? 'selected' : '' %>><%= vaccine.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Data de Aplicação</label>
+            <input type="date" name="date" class="form-control" value="<%= query.date || '' %>">
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select">
+              <option value="">Todos</option>
+              <option value="aplicada" <%= query.status === 'aplicada' ? 'selected' : '' %>>Aplicada</option>
+              <option value="pendente" <%= query.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+              <option value="atrasada" <%= query.status === 'atrasada' ? 'selected' : '' %>>Atrasada</option>
+            </select>
+          </div>
+
+          <div class="col-md-1 d-flex align-items-end">
+            <button class="btn btn-success w-80">Filtrar</button>
+          </div>
+        </form>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-success text-center">
+              <tr>
+                <th>ID</th>
+                <th>Animal</th>
+                <th>Vacina</th>
+                <th>Veterinário</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% filteredApplications.forEach(app => { %>
+                <tr>
+                  <td><%= app.id %></td>
+                  <td><%= app.animal.name %></td>
+                  <td><%= app.vaccine.name %></td>
+                  <td><%= app.veterinario.user.name %></td>
+                  <td><%= app.application_date %></td>
+                  <td>
+                    <span class="badge <%= app.status === 'aplicada' ? 'bg-success' : app.status === 'pendente' ? 'bg-primary' : 'bg-danger' %>">
+                      <%= app.status %>
+                    </span>
+                
+
+
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= app.id %>">
+                        <i class="fa-solid fa-pencil"></i>
+                      </button>
+          
+          <!-- Botão para abrir o modal de confirmação -->
+          <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= app.id %>">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+                  </td>
+
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+
+          <% if (filteredApplications.length === 0) { %>
+            <p class="text-center mt-3 text-muted">Nenhuma aplicação encontrada com os filtros selecionados.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <% filteredApplications.forEach(app => { %>
+        <div class="modal fade" id="editUserModal-<%= app.id %>" tabindex="-1" aria-labelledby="editUserModalLabel-<%= app.id %>" aria-hidden="true">
+          <div class="modal-dialog">
+            <form class="modal-content shadow-lg rounded-4 border-0" action="/application/<%= app.id %>?_method=PUT" method="POST" style="background: #f9fdfb;">
+              <div class="modal-header border-0" style="background-color: #2e7d32; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+                <h5 class="modal-title" id="editUserModalLabel-<%= app.id %>">Editar Aplicação</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body px-4 py-3">
+      
+                <!-- Animal -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-success">Animal</label>
+                  <select name="animal_id" class="form-select border-success-subtle" required>
+                    <% animals.forEach(animal => { %>
+                      <option value="<%= animal.id %>" <%= app.animal.id === animal.id ? 'selected' : '' %>><%= animal.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+      
+                <!-- Vacina -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-success">Vacina</label>
+                  <select name="vaccine_id" class="form-select border-success-subtle" required onchange="checkRequiredDoses(this)">
+                    <% vaccines.forEach(vaccine => { %>
+                      <option value="<%= vaccine.id %>" data-required_doses="<%= vaccine.required_doses %>" <%= app.vaccine.id === vaccine.id ? 'selected' : '' %>><%= vaccine.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+      
+                <!-- Veterinário -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-success">Veterinário</label>
+                  <select name="veterinario_id" class="form-select border-success-subtle" required>
+                    <% veterinarios.forEach(veterinario => { %>
+                      <option value="<%= veterinario.id %>" <%= app.veterinario.id === veterinario.id ? 'selected' : '' %>><%= veterinario.user.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+      
+                <!-- Data aplicação -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-success">Data de Aplicação</label>
+                  <input type="date" name="application_date" class="form-control border-success-subtle" value="<%= app.application_date %>" required>
+                </div>
+      
+                <!-- Próxima dose -->
+                <div class="mb-3 nextApplicationContainer" style="<%= app.next_application_date ? '' : 'display: none;' %>">
+                  <label class="form-label fw-semibold text-success">Data da Próxima Aplicação</label>
+                  <input type="date" name="next_application_date" class="form-control border-success-subtle" value="<%= app.next_application_date %>">
+                </div>
+      
+                <!-- Status -->
+                <div class="mb-3">
+                  <label class="form-label fw-semibold text-success">Status</label>
+                  <select name="status" class="form-select border-success-subtle" required>
+                    <option value="pendente" <%= app.status === 'pendente' ? 'selected' : '' %>>Pendente</option>
+                    <option value="aplicada" <%= app.status === 'aplicada' ? 'selected' : '' %>>Aplicada</option>
+                    <option value="atrasada" <%= app.status === 'atrasada' ? 'selected' : '' %>>Atrasada</option>
+                  </select>
+                </div>
+              </div>
+      
+              <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-success">Salvar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+        
+
+    <!-- 🗓️ Modal de Calendário -->
+    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white">
+            <h5 class="modal-title" id="calendarModalLabel">📅 Calendário de Vacinação</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body">
+            <div id="calendarModalContainer"></div>
+            <div class="mt-3">
+              <span class="badge bg-success">Aplicada</span>
+              <span class="badge bg-primary">Agendada</span>
+              <span class="badge bg-danger">Atrasada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 🐾 Modal de Nova Aplicação -->
+<!-- 🐾 Modal de Nova Aplicação -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content shadow-lg rounded-4 border-0" action="/application" method="POST" style="background: #f9fdfb;">
+        <div class="modal-header border-0" style="background-color: #2e7d32; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="modal-title" id="createUserModalLabel">Cadastrar Nova Aplicação</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+          <!-- Animal -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Animal</label>
+            <select name="animal_id" class="form-select border-success-subtle" required>
+              <% animals.forEach(animal => { %>
+                <option value="<%= animal.id %>"><%= animal.name %></option>
+              <% }) %>
+            </select>
+          </div>
+  
+          <!-- Vacina -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Vacina</label>
+            <select name="vaccine_id" class="form-select border-success-subtle" required onchange="checkRequiredDoses(this)">
+              <% vaccines.forEach(vaccine => { %>
+                <option value="<%= vaccine.id %>" data-required_doses="<%= vaccine.required_doses %>"><%= vaccine.name %></option>
+              <% }) %>
+            </select>
+          </div>
+  
+          <!-- Veterinário -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Veterinário</label>
+            <select name="veterinario_id" class="form-select border-success-subtle" required>
+              <% veterinarios.forEach(veterinario => { %>
+                <option value="<%= veterinario.id %>"><%= veterinario.user.name %></option>
+              <% }) %>
+            </select>
+          </div>
+  
+          <!-- Data aplicação -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Data de Aplicação</label>
+            <input type="date" name="application_date" class="form-control border-success-subtle" required>
+          </div>
+  
+          <!-- Próxima dose -->
+          <div class="mb-3 nextApplicationContainer" style="display: none;">
+            <label class="form-label fw-semibold text-success">Data da Próxima Aplicação</label>
+            <input type="date" name="next_application_date" class="form-control border-success-subtle">
+          </div>
+  
+          <!-- Status -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold text-success">Status</label>
+            <select name="status" class="form-select border-success-subtle" required>
+              <option value="pendente">Pendente</option>
+              <option value="aplicada">Aplicada</option>
+              <option value="atrasada">Atrasada</option>
+            </select>
+          </div>
+        </div>
+  
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">Cadastrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  </main>
+</div>
+
+<% filteredApplications.forEach(app => { %>
+    <!-- Modal de confirmação de exclusão -->
+    <div class="modal fade" id="confirmDeleteModal-<%= app.id %>" tabindex="-1" aria-labelledby="confirmDeleteLabel-<%= app.id %>" aria-hidden="true">
+      <div class="modal-dialog">
+        <form class="modal-content shadow-lg rounded-4 border-0" action="/application/<%= app.id %>?_method=DELETE" method="POST" style="background: #fefefe;">
+          <div class="modal-header border-0" style="background-color: #c62828; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <h5 class="modal-title" id="confirmDeleteLabel-<%= app.id %>">Confirmar Exclusão</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+          </div>
+          <div class="modal-body px-4 py-3">
+            <p class="mb-0">Tem certeza que deseja excluir a aplicação <strong><%= app.id %></strong>?</p>
+          </div>
+          <div class="modal-footer border-0 px-4 pb-4">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-danger">Excluir</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script>
+  let calendarModalInstance;
+
+  const calendarModalEl = document.getElementById('calendarModal');
+  calendarModalEl.addEventListener('shown.bs.modal', function () {
+    const calendarEl = document.getElementById('calendarModalContainer');
+
+    if (!calendarModalInstance) {
+      calendarModalInstance = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        dayMaxEventRows: true,
+        moreLinkClick: 'popover',
+        events: [
+          <% applications.forEach(app => { %>
+            {
+              title: "<%= app.animal.name %> - <%= app.vaccine.name %>",
+              start: "<%= app.application_date %>",
+              color: "<%= app.status === 'aplicada' ? '#28a745' : app.status === 'pendente' ? '#0d6efd' : '#dc3545' %>"
+            },
+            <% if (app.next_application_date) { %>
+              {
+                title: "<%= app.animal.name %> - Próxima dose",
+                start: "<%= app.next_application_date %>",
+                color: "#0d6efd"
+              },
+            <% } %>
+          <% }); %>
+        ]
+      });
+
+      calendarModalInstance.render();
+    }
+  });
+</script>
+
+<script src="/js/dashboard.js"></script>
+<%- include('../partials/footer') %>

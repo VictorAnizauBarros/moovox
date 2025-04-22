@@ -1,9 +1,15 @@
 const prisma = require("../config/database");
 
+
 const applicationService = {
   async getAllApplications() {
     try {
-      const applications = await prisma.application.findMany();
+      const applications = await prisma.application.findMany({
+        include: {
+          animal: true, 
+          vaccine: true
+        }
+      });
       return applications;
     } catch (error) {
       console.log(
@@ -36,6 +42,7 @@ const applicationService = {
     vaccine_id,
     veterinario_id,
     application_date,
+    next_application_date,
     status
   ) {
     try {
@@ -45,6 +52,7 @@ const applicationService = {
           vaccine_id,
           veterinario_id,
           application_date,
+          next_application_date: next_application_date ? next_application_date : null,
           status,
         },
       });
@@ -60,6 +68,7 @@ const applicationService = {
     vaccine_id,
     veterinario_id,
     application_date,
+    next_application_date,
     status
   ) {
     try {
@@ -72,6 +81,7 @@ const applicationService = {
           vaccine_id: vaccine_id,
           veterinario_id: veterinario_id,
           application_date: application_date,
+          next_application_date: next_application_date ? next_application_date : null,
           status: status,
         },
       });
@@ -96,6 +106,48 @@ const applicationService = {
       throw new Error("Erro ao deletar aplicação (service): " + error.message);
     }
   },
+  async getFilteredApplications(filters) {
+    try {
+      const where = {};
+  
+      if (filters.animal) {
+        where.animal_id = parseInt(filters.animal);
+      }
+  
+      if (filters.vaccine) {
+        where.vaccine_id = parseInt(filters.vaccine);
+      }
+  
+      if (filters.status) {
+        where.status = filters.status;
+      }
+  
+      if (filters.date) {
+        where.application_date = filters.date;
+      }
+  
+      const applications = await prisma.application.findMany({
+        where,
+        include: {
+          animal: true,
+          vaccine: true,
+          veterinario: {
+            include: {
+              user: true,
+            },
+          },
+        },
+        orderBy: {
+          application_date: 'desc',
+        },
+      });
+  
+      return applications;
+    } catch (error) {
+      console.log("Erro ao buscar aplicações filtradas (service): " + error.message);
+      throw new Error("Erro ao buscar aplicações filtradas (service): " + error.message);
+    }
+  }
 };
 
 module.exports = applicationService; 

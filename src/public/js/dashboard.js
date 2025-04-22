@@ -35,3 +35,23 @@ window.addEventListener("load", () => {
     // Adiciona marcador com ícone pulsante
     L.marker([-22.90, -47.06], { icon: pulseIcon }).addTo(map);
   });
+
+ 
+  function checkRequiredDoses(selectElement) {
+    const selectedOption = selectElement.options[selectElement.selectedIndex];
+    const doses = parseInt(selectedOption.getAttribute('data-required_doses') || "1");
+
+    const modal = selectElement.closest('.modal');
+    const nextAppContainer = modal.querySelector('.nextApplicationContainer');
+
+    if (doses > 1) {
+      nextAppContainer.style.display = 'block';
+    } else {
+      nextAppContainer.style.display = 'none';
+    }
+  }
+  // Garante o comportamento correto ao abrir o modal
+  document.addEventListener("DOMContentLoaded", function() {
+    checkRequiredDoses();
+  });
+
