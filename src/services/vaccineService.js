@@ -14,6 +14,7 @@ const vaccineService = {
       );
     }
   },
+  
   async getVaccineById(id) {
     try {
       if (!id) {
@@ -107,6 +108,39 @@ const vaccineService = {
       throw new Error("Erro ao deletar vacina (service): " + error.message);
     }
   },
+  async getFilteredVaccines({ search, type, target_disease, expiration_date }) {
+    const filters = {};
+  
+    // 🔍 Filtro por nome (search)
+    if (search) {
+      filters.name = {
+        contains: search,
+      };
+    }
+  
+    // 🎯 Tipo de vacina
+    if (type) {
+      filters.type = type;
+    }
+  
+    // 🦠 Doença combatida
+    if (target_disease) {
+      filters.target_disease = {
+        contains: target_disease,
+      };
+    }
+  
+    if (expiration_date) {
+      filters.expiration_date = expiration_date
+    }
+  
+    return await prisma.vaccine.findMany({
+      where: filters,
+      orderBy: {
+        name: 'asc',
+      },
+    });
+  }
 };
 
 module.exports = vaccineService; 

@@ -50,17 +50,30 @@ const adminController = {
       res.status(500).send("Erro interno do servidor");
     }
   },
-  async getVaccineDashboard(req,res){
+  async getVaccineDashboard(req, res) {
     try {
-      const vaccines = await vaccinesService.getAllVaccines();
-      res.render("admin/vaccines", {vaccines});
-      
+      const { search, type, target_disease, expiration_date } = req.query;
+  
+      const vaccines = await vaccinesService.getFilteredVaccines({
+        search,
+        type,
+        target_disease,
+        expiration_date
+      });
+  
+      res.render("admin/vaccines", {
+        vaccines,
+        search,
+        type,
+        target_disease,
+        expiration_date
+      });
+  
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: "Internal Server Error" });
-      
     }
-  }, 
+  },
   async getApplicationDashboard(req, res) {
     try {
       const vaccines = await vaccinesService.getAllVaccines(); 

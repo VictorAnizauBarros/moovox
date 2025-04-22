@@ -15,17 +15,71 @@
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Nova Vacina</button>
     </div>
 
-              <!-- Barra de Pesquisa -->
-              <form class="input-group mb-4" method="GET" action="/admin/users">
-                <input type="text" class="form-control fade-delay-1" placeholder="Pesquisar usuários..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
-                <button class="btn btn-outline-secondary" type="submit">Buscar</button>
-              </form>
+    <!-- Barra de Pesquisa por Nome -->
+<!-- 🔍 Busca por nome -->
+<form class="mb-4" method="GET" action="/admin/vaccines">
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar vacina por nome..."
+      name="search"
+      value="<%= typeof search !== 'undefined' ? search : '' %>"
+    />
+    <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+  </div>
+</form>
+
+<div class="cardshadow-sm border-0 rounded-4 mb-4">
+  <!-- 🎯 Filtros Avançados -->
+  <div class="card shadow-sm border-0 rounded-4 mb-4">
+    <div class="card-header bg-success text-white rounded-top-4 d-flex align-items-center">
+      <i class="bi bi-funnel-fill me-2"></i>
+      <strong>Filtros Avançados</strong>
+    </div>
+    <div class="card-body">
+      <form method="GET" action="/admin/vaccines" class="row row-cols-1 row-cols-md-3 g-3">
+        <input type="hidden" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+        
+        <!-- Tipo de Vacina -->
+        <div class="col">
+          <label for="type" class="form-label">Tipo de Vacina</label>
+          <select class="form-select rounded-3" name="type" id="type">
+            <option value="">Todos</option>
+            <option value="injetavel" <%= type === 'injetavel' ? 'selected' : '' %>>Injetável</option>
+            <option value="oral" <%= type === 'oral' ? 'selected' : '' %>>Oral</option>
+            <option value="intranasal" <%= type === 'intranasal' ? 'selected' : '' %>>Intranasal</option>
+            <option value="transdermica" <%= type === 'transdermica' ? 'selected' : '' %>>Transdérmica</option>
+            <option value="intramamaria" <%= type === 'intramamaria' ? 'selected' : '' %>>Intramamária</option>
+            <option value="spray" <%= type === 'spray' ? 'selected' : '' %>>Spray</option>
+          </select>
+        </div>
+
+        <!-- Doença Combatida -->
+        <div class="col">
+          <label for="target_disease" class="form-label">Doença Combatida</label>
+          <input type="text" name="target_disease" class="form-control rounded-3" value="<%= target_disease || '' %>">
+        </div>
+
+        <!-- Validade -->
+        <div class="col">
+          <label for="expiration_date" class="form-label">Validade</label>
+          <input type="date" name="expiration_date" class="form-control rounded-3" value="<%= expiration_date || '' %>">
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-success w-100">Aplicar Filtros</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 
     <!-- Tabela de Animais -->
 <div class="table-responsive fade-delay-2">
-  <table class="table table-hover align-middle text-center">
-    <thead class="table-dark">
+  <table class="table table-hover table-bordered align-middle text-center">
+    <thead class="table-success text-dark">
       <tr>
         <th>ID</th>
         <th>Nome</th>
@@ -45,12 +99,12 @@
           <td><%= vaccine.type %></td>
           <td>
             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= vaccine.id %>">
-              Editar
+              <i class="fa-solid fa-pencil"></i>
             </button>
 
 <!-- Botão para abrir o modal de confirmação -->
 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= vaccine.id %>">
-  Excluir
+  <i class="fa-solid fa-trash-can"></i>
 </button>
 
           </td>
