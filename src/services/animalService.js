@@ -15,6 +15,44 @@ const animalService = {
       throw new Error("Erro ao buscar todos os animais: " + error.message);
     }
   },
+
+  async getAllAnimalsWithDetails(filters = {}) {
+    try {
+      const where = {};
+  
+      if (filters.search) {
+        where.name = {
+          contains: filters.search, // Removido mode: 'insensitive'
+        };
+      }
+  
+      if (filters.species) {
+        where.species = filters.species;
+      }
+  
+      if (filters.breed) {
+        where.breed = filters.breed;
+      }
+  
+      if (filters.health_status) {
+        where.health_status = filters.health_status;
+      }
+  
+      const animals = await prisma.animal.findMany({
+        where,
+        orderBy: {
+          name: 'asc',
+        },
+      });
+  
+      return animals;
+    } catch (error) {
+      console.error("Erro ao buscar animais com filtros no service:", error);
+      throw new Error("Erro ao buscar animais com filtros");
+    }
+  },
+  
+  
   // Método para buscar um animal por ID
   async getAnimalById(id) {
     // Verifica se o ID foi fornecido

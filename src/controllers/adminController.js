@@ -27,11 +27,27 @@ const adminController = {
   },
   async getAnimalsDashboard(req, res) {
     try {
-      const animals = await animalsService.getAllAnimals();
-      res.render("admin/animals", { animals });
+      const { search, species, breed, health_status } = req.query;
+  
+      const filters = {
+        search,
+        species,
+        breed,
+        health_status,
+      };
+  
+      const animals = await animalsService.getAllAnimalsWithDetails(filters);
+  
+      res.render("admin/animals", {
+        animals,
+        search,
+        species,
+        breed,
+        health_status,
+      });
     } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: "Internal Server Error" });
+      console.error("Erro ao carregar dashboard de animais:", error);
+      res.status(500).send("Erro interno do servidor");
     }
   },
   async getVaccineDashboard(req,res){

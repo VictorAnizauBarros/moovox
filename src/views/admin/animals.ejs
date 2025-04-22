@@ -14,52 +14,103 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Novo Animal</button>
           </div>
         
-          <!-- Barra de Pesquisa -->
-          <form class="input-group mb-4" method="GET" action="/admin/users">
-            <input type="text" class="form-control fade-delay-1" placeholder="Pesquisar usuários..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
-            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
-          </form>
-        
-          <!-- Tabela de Animais -->
-<div class="table-responsive fade-delay-2">
-  <table class="table table-hover align-middle text-center">
-    <thead class="table-dark">
-      <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Especie</th>
-        <th>Raça</th>
-        <th>Idade</th>
-        <th>Peso</th>
-        <th>Saúde</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% animals.forEach(animal => { %>
+<!-- Barra de Pesquisa por Nome -->
+<!-- 🔍 Busca por nome -->
+<form class="mb-4" method="GET" action="/admin/animals">
+  <div class="input-group">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar animal por nome..."
+      name="search"
+      value="<%= typeof search !== 'undefined' ? search : '' %>"
+    />
+    <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+  </div>
+</form>
+
+<div class="cardshadow-sm border-0 rounded-4 mb-4">
+  
+  <!-- 🎯 Filtros Avançados -->
+<div class="card shadow-sm border-0 rounded-4 mb-4">
+  <div class="card-header bg-success text-white rounded-top-4 d-flex align-items-center">
+    <i class="bi bi-funnel-fill me-2"></i>
+    <strong>Filtros Avançados</strong>
+  </div>
+  <div class="card-body">
+    <form method="GET" action="/admin/animals" class="row row-cols-1 row-cols-md-3 g-3">
+      <input type="hidden" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+
+      <!-- Espécie -->
+      <div class="col">
+        <label for="species" class="form-label">Espécie</label>
+        <select class="form-select rounded-3" name="species" id="species">
+          <option value="">Todas</option>
+          <option value="Bovino" <%= species === 'Bovino' ? 'selected' : '' %>>Bovino</option>
+          <option value="Suíno" <%= species === 'Suíno' ? 'selected' : '' %>>Suíno</option>
+          <option value="Equino" <%= species === 'Equino' ? 'selected' : '' %>>Equino</option>
+        </select>
+      </div>
+
+      <!-- Saúde -->
+      <div class="col">
+        <label for="health_status" class="form-label">Saúde</label>
+        <select class="form-select rounded-3" name="health_status" id="health_status">
+          <option value="">Todas</option>
+          <option value="saudavel" <%= health_status === 'saudavel' ? 'selected' : '' %>>Saudável</option>
+          <option value="doente" <%= health_status === 'doente' ? 'selected' : '' %>>Doente</option>
+          <option value="recuperacao" <%= health_status === 'recuperacao' ? 'selected' : '' %>>Em recuperação</option>
+          <option value="falecido" <%= health_status === 'falecido' ? 'selected' : '' %>>Falecido</option>
+        </select>
+      </div>
+
+      <!-- Botão -->
+      <div class="col d-flex align-items-end">
+        <button type="submit" class="btn btn-success w-100 rounded-3">Filtrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+  <!-- Tabela de Animais -->
+  <div class="table-responsive fade-delay-2">
+    <table class="table table-hover table-bordered align-middle text-center">
+      <thead class="table-success text-dark">
         <tr>
-          <td><%= animal.id %></td>
-          <td><%= animal.name %></td>
-          <td><%= animal.species %></td>
-          <td><%= animal.breed %></td>
-          <td><%= animal.age %></td>
-          <td><%= animal.weight %></td>
-          <td><%= animal.health_status %></td>
-          <td>
-            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= animal.id %>">
-              Editar
-            </button>
-
-<!-- Botão para abrir o modal de confirmação -->
-<button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= animal.id %>">
-  Excluir
-</button>
-
-          </td>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Especie</th>
+          <th>Raça</th>
+          <th>Idade</th>
+          <th>Peso (em arroba)</th>
+          <th>Saúde</th>
+          <th>Ações</th>
         </tr>
-      <% }) %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% animals.forEach(animal => { %>
+          <tr>
+            <td><%= animal.id %></td>
+            <td><%= animal.name %></td>
+            <td><%= animal.species %></td>
+            <td><%= animal.breed %></td>
+            <td><%= animal.age %></td>
+            <td><%= animal.weight %></td>
+            <td><%= animal.health_status %></td>
+            <td>
+              <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= animal.id %>">
+                <i class="fa-solid fa-pencil"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= animal.id %>">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
 </div>
 
 <!-- TODOS os modais vêm DEPOIS da tabela -->
@@ -78,7 +129,11 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-success">Especie</label>
-            <input type="text" name="species" class="form-control  border-success-subtle" value="<%= animal.species %>" required>
+            <select name="species" class="form-select  border-success-subtle" required>
+              <option value="bovino" <%= animal.species === 'bovino' ? 'selected' : '' %>>Bovino</option>
+              <option value="suino" <%= animal.species === 'suino' ? 'selected' : '' %>>Suino</option>
+              <option value="equino" <%= animal.species === 'equino' ? 'selected' : '' %>>Equino</option>
+            </select>
           </div>
           <div class="mb-3">
             <label class="form-label fw-semibold text-success">Raça</label>
@@ -111,6 +166,29 @@
   </div>
 <% }) %>
 
+<% animals.forEach(animal => { %>
+  <!-- Modal de confirmação de exclusão -->
+  <div class="modal fade" id="confirmDeleteModal-<%= animal.id %>" tabindex="-1" aria-labelledby="confirmDeleteLabel-<%= animal.id %>" aria-hidden="true">
+    <div class="modal-dialog">
+      <form class="modal-content shadow-lg rounded-4 border-0" action="/animal/<%= animal.id %>?_method=DELETE" method="POST" style="background: #fefefe;">
+        <div class="modal-header border-0" style="background-color: #c62828; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="modal-title" id="confirmDeleteLabel-<%= animal.id %>">Confirmar Exclusão</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body px-4 py-3">
+          <p class="mb-0 text-dark">Tem certeza que deseja excluir o usuário <strong><%= animal.name %></strong>?</p>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Excluir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+<% }) %>
+
+
+
 
     </main>
 
@@ -131,8 +209,11 @@
         </div>
         <div class="mb-3">
           <label class="form-label fw-semibold text-success">Especie</label>
-          <input type="text" name="species" class="form-control border-success-subtle" required>
-        </div>
+          <select name="species" class="form-select border-success-subtle" required>
+            <option value="bovino">Bovino</option>
+            <option value="suino">Suíno</option>
+            <option value="equino">Equíno</option>
+          </select>
         <div class="mb-3">
           <label class="form-label fw-semibold text-success">Raça</label>
           <input type="text" name="breed" class="form-control border-success-subtle" required>
@@ -142,7 +223,7 @@
           <input type="number" name="age" class="form-control border-success-subtle" required>
         </div>
         <div class="mb-3">
-          <label class="form-label fw-semibold text-success">Peso</label>
+          <label class="form-label fw-semibold text-success">Peso (em arrobas)</label>
           <input type="text" name="weight" class="form-control border-success-subtle" required>
         </div>
         <div class="mb-3">
@@ -163,26 +244,8 @@
   </div>
 </div>
 
-<% animals.forEach(animal => { %>
-  <!-- Modal de confirmação de exclusão -->
-  <div class="modal fade" id="confirmDeleteModal-<%= animal.id %>" tabindex="-1" aria-labelledby="confirmDeleteLabel-<%= animal.id %>" aria-hidden="true">
-    <div class="modal-dialog">
-      <form class="modal-content shadow-lg rounded-4 border-0" action="/animal/<%= animal.id %>?_method=DELETE" method="POST" style="background: #fefefe;">
-        <div class="modal-header border-0" style="background-color: #c62828; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-          <h5 class="modal-title" id="confirmDeleteLabel-<%= animal.id %>">Confirmar Exclusão</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body px-4 py-3">
-          <p class="mb-0">Tem certeza que deseja excluir o animal <strong><%= animal.name %></strong>?</p>
-        </div>
-        <div class="modal-footer border-0 px-4 pb-4">
-          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-danger">Excluir</button>
-        </div>
-      </form>
-    </div>
-  </div>
-<% }) %>
+
+
 
 
 <script src="/js/dashboard.js"></script>

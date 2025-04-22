@@ -31,8 +31,8 @@
         
           <!-- Tabela de Usuários -->
 <div class="table-responsive fade-delay-2">
-  <table class="table table-hover align-middle text-center">
-    <thead class="table-dark">
+  <table class="table table-hover table-bordered align-middle text-center">
+    <thead class="table-success text-dark">
       <tr>
         <th>ID</th>
         <th>Nome</th>
@@ -50,12 +50,12 @@
           <td><%= user.role %></td>
           <td>
             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editUserModal-<%= user.id %>">
-              Editar
+              <i class="fa-solid fa-pencil"></i>
             </button>
 
 <!-- Botão para abrir o modal de confirmação -->
 <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal-<%= user.id %>">
-  Excluir
+  <i class="fa-solid fa-trash-can"></i>
 </button>
 
           </td>

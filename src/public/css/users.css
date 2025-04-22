@@ -202,3 +202,21 @@
   font-size: 0.75rem;
   padding: 2px;
 }
+
+.card-header {
+  font-size: 1.1rem;
+}
+
+.card select,
+.card input {
+  border: 1px solid #ccc;
+}
+
+.card .btn-success {
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.card .btn-success:hover {
+  background-color: #218838;
+}
