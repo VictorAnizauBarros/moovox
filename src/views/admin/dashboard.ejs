@@ -19,7 +19,7 @@
         <div class="card agro-card shadow-sm border-0 fade-delay-1">
           <div class="card-body text-white">
             <h6 class="card-subtitle mb-2"><i class="bi bi-people-fill me-2"></i>Usuários</h6>
-            <p class="display-6 fw-bold">154</p>
+            <p class="display-6 fw-bold"><%= totalUsers%></p>
           </div>
         </div>
       </div>
@@ -27,7 +27,7 @@
         <div class="card agro-card-green shadow-sm border-0 fade-delay-2" >
           <div class="card-body text-white">
             <h6 class="card-subtitle mb-2"><i class="bi bi-piggy-bank-fill me-2"></i> Animais Registrados</h6>
-            <p class="display-6 fw-bold">87</p>
+            <p class="display-6 fw-bold"><%= totalAnimals%></p>
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
         <div class="card agro-card-yellow shadow-sm border-0 fade-delay-3" >
           <div class="card-body text-dark">
             <h6 class="card-subtitle mb-2"><i class="bi bi-capsule-pill me-2"></i>Doses Pendentes</h6>
-            <p class="display-6 fw-bold">12</p>
+            <p class="display-6 fw-bold"><%= pending_doses%></p>
           </div>
         </div>
       </div>
@@ -57,9 +57,9 @@
             <i class="bi bi-person-lines-fill me-2"></i>Últimos Usuários Cadastrados
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">João Silva - Veterinário</li>
-            <li class="list-group-item">Maria Souza - Funcionária</li>
-            <li class="list-group-item">Carlos Almeida - Fazendeiro</li>
+            <% lastThreeUsers.forEach(user => { %>
+              <li class="list-group-item"><%= user.name %> - <%= user.role %></li>
+            <% }) %>
           </ul>
         </div>
       </div>
@@ -67,12 +67,17 @@
       <div class="col-md-6">
         <div class="card shadow-sm border-0 fade-delay-2">
           <div class="card-header bg-dark text-white">
-            <i class="bi bi-capsule-pill me-2"></i>Próximas Doses de Vacina
+            <i class="bi bi-capsule-pill me-2"></i>Doses Pendendentes
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">🐄 Mimosa - 18/04/2025</li>
-            <li class="list-group-item">🐄 Branquinha - 20/04/2025</li>
-            <li class="list-group-item">🐄 Pérola - 22/04/2025</li>
+            <% lasThreePendingDoses.forEach(dose => { 
+              const parts = dose.application_date.split('-'); // [YYYY, MM, DD]
+              const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+            %>
+              <li class="list-group-item">
+                <%= dose.animal.name %> - <%= formattedDate %>
+              </li>
+            <% }) %>
           </ul>
         </div>
       </div>

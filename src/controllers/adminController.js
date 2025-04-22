@@ -6,7 +6,18 @@ const applicationService = require('../services/applicationService');
 const adminController = {
   async getAdminDashboard(req, res) {
     try {
-      res.render("admin/dashboard");
+      const totalUsers = await userService.countUsers(); 
+      const totalAnimals = await animalsService.countAnimals();
+      const pending_doses = await applicationService.countPendentApplication();
+      const lastThreeUsers = await userService.getLastThreeUsers(); 
+      const lasThreePendingDoses = await applicationService.getLastThreePendingDoses(); 
+      res.render("admin/dashboard",{
+        totalUsers,
+        totalAnimals, 
+        pending_doses,
+        lastThreeUsers, 
+        lasThreePendingDoses,
+      });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: "Internal Server Error" });

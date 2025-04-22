@@ -107,6 +107,8 @@ model Application {
   application_date      String
   next_application_date String?
   status                Status_Aplicacao
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   // Relações 
   animal      Animal      @relation(fields: [animal_id], references: [id], onDelete: Cascade)

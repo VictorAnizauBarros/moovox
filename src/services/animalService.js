@@ -159,6 +159,17 @@ const animalService = {
       throw new Error("Erro ao deletar animal: " + error.message);
     }
   },
+  async countAnimals(){
+    try {
+      const totalAnimals = await prisma.animal.count(); 
+      return totalAnimals;
+      
+    } catch (error) {
+      console.error(`Erro ao contar animais (service): ${error}`);
+      throw new Error("Erro ao contar animais: " + error.message);
+      
+    }
+  }
 };
 
 // Exporta o serviço

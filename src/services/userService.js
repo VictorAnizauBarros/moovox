@@ -212,6 +212,37 @@ const userService = {
       );
     }
   },
+  async countUsers(){
+    try {
+      const totalUsers = await prisma.user.count();
+      return totalUsers 
+      
+    } catch (error) {
+      console.log("Erro ao contar usuários: " + error.message); 
+      throw new Error("Erro ao contar usuários (service): " + error.message);
+      
+    }
+  }, 
+  async getLastThreeUsers(){
+    try {
+      const lastUsers = await prisma.user.findMany({
+        orderBy: {
+          created_at: 'desc'
+        }, 
+        take: 3, 
+        select: {
+          name: true, 
+          role: true
+        }
+      }); 
+      return lastUsers
+      
+    } catch (error) {
+      console.error(`Erro ao buscar os últimos três usuários no service: ${error}`);
+      throw new Error("Erro ao buscar os últimos três usuários (service): " + error.message);
+      
+    }
+  }
 };
 
 // Exportação do serviço de usuário

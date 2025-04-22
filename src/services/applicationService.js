@@ -147,6 +147,50 @@ const applicationService = {
       console.log("Erro ao buscar aplicações filtradas (service): " + error.message);
       throw new Error("Erro ao buscar aplicações filtradas (service): " + error.message);
     }
+  }, 
+  async countPendentApplication(){
+    try {
+      const pending_doses = await prisma.application.count({
+        where: {
+          status: "pendente"
+        }
+      }
+      ); 
+      return pending_doses;
+      
+    } catch (error) {
+      console.log("Erro ao contar aplicações pendentes (service): " + error.message);
+      throw new Error("Erro ao contar aplicações pendentes (service): " + error.message);
+      
+    }
+  }, 
+  async getLastThreePendingDoses(){
+    try {
+      const lasThreePendingDoses = await prisma.application.findMany({
+        where: {
+          status: "pendente"
+        }, 
+        orderBy: {
+          application_date: 'asc'
+        },
+        take: 3,
+        select: {
+          application_date: true, 
+          animal: {
+            select: {
+              name: true
+            }
+           
+          }
+        }
+      }); 
+      return lasThreePendingDoses;
+      
+    } catch (error) {
+      console.log("Erro ao buscar as últimas três doses pendentes (service): " + error.message);
+      throw new Error("Erro ao buscar as últimas três doses pendentes (service): " + error.message);
+      
+    }
   }
 };
 
