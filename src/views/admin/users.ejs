@@ -14,11 +14,20 @@
             <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">+ Novo Usuário</button>
           </div>
         
-          <!-- Barra de Pesquisa -->
           <form class="input-group mb-4" method="GET" action="/admin/users">
-            <input type="text" class="form-control fade-delay-1" placeholder="Pesquisar usuários..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+            <input type="text" class="form-control fade-delay-1" placeholder="Pesquisar por nome..." name="search" value="<%= typeof search !== 'undefined' ? search : '' %>">
+          
+            <select name="role" class="form-select w-auto">
+              <option value="">Todos os tipos</option>
+              <option value="admin" <%= query.role === 'admin' ? 'selected' : '' %>>Administrador</option>
+              <option value="veterinario" <%= query.role === 'veterinario' ? 'selected' : '' %>>Veterinário</option>
+              <option value="fazendeiro" <%= query.role === 'fazendeiro' ? 'selected' : '' %>>Fazendeiro</option>
+              <option value="funcionario" <%= query.role === 'funcionario' ? 'selected' : '' %>>Funcionário</option>
+            </select>
+          
             <button class="btn btn-outline-secondary" type="submit">Buscar</button>
           </form>
+          
         
           <!-- Tabela de Usuários -->
 <div class="table-responsive fade-delay-2">

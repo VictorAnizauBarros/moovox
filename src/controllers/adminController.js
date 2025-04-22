@@ -14,8 +14,12 @@ const adminController = {
   },
   async getUsersDashboard(req, res) {
     try {
-      const users = await userService.getAllUsers();
-      res.render("admin/users", { users });
+      const { search, role } = req.query;
+      const users = await userService.getAllUsers({ search, role });
+      res.render("admin/users", { users,
+        search,
+        query: { role }
+       });
     } catch (error) {
       console.log(error);
       res.status(500).send({ message: "Internal Server Error" });

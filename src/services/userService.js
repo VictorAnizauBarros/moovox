@@ -7,19 +7,31 @@ const bcrypt = require("bcryptjs");
 // Definição do serviço de usuário
 const userService = {
   // Método para buscar todos os usuários
-  async getAllUsers() {
+  async getAllUsers({ search, role }) {
     try {
-      // Utilização do Prisma para buscar todos os usuários no banco de dados
-      const users = await prisma.user.findMany();
+      const users = await prisma.user.findMany({
+        where: {
+          AND: [
+            search
+              ? {
+                  name: {
+                    contains: search,
+                  },
+                }
+              : {},
+            role ? { role } : {},
+          ],
+        },
+      });
+  
       return users;
     } catch (error) {
-      // Tratamento de erro caso ocorra algum problema na busca
       console.error(`Erro ao buscar todos os usuários no service: ${error}`);
       throw new Error(
         "Erro ao buscar todos os usuários (service): " + error.message
       );
     }
-  },
+  },  
 
   // Método para buscar um usuário por ID
   async getUserById(id) {
