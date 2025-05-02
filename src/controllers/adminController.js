@@ -3,9 +3,12 @@ const animalsService = require("../services/animalService");
 const vaccinesService = require("../services/vaccineService"); 
 const vetService = require('../services/vetService');
 const applicationService = require('../services/applicationService');
+
 const adminController = {
   async getAdminDashboard(req, res) {
     try {
+      const user_name = (req.session.user.name).toUpperCase(); 
+      const user_role = (req.session.user.role).toUpperCase(); 
       const totalUsers = await userService.countUsers(); 
       const totalAnimals = await animalsService.countAnimals();
       const pending_doses = await applicationService.countPendentApplication();
@@ -17,6 +20,8 @@ const adminController = {
         pending_doses,
         lastThreeUsers, 
         lasThreePendingDoses,
+        user_name, 
+        user_role, 
       });
     } catch (error) {
       console.log(error);
@@ -25,11 +30,15 @@ const adminController = {
   },
   async getUsersDashboard(req, res) {
     try {
+      const user_name = (req.session.user.name).toUpperCase(); 
+      const user_role = (req.session.user.role).toUpperCase(); 
       const { search, role } = req.query;
       const users = await userService.getAllUsers({ search, role });
       res.render("admin/users", { users,
         search,
-        query: { role }
+        query: { role },
+        user_name,
+        user_role,
        });
     } catch (error) {
       console.log(error);
@@ -38,6 +47,8 @@ const adminController = {
   },
   async getAnimalsDashboard(req, res) {
     try {
+      const user_name = (req.session.user.name).toUpperCase(); 
+      const user_role = (req.session.user.role).toUpperCase(); 
       const { search, species, breed, health_status } = req.query;
   
       const filters = {
@@ -55,6 +66,8 @@ const adminController = {
         species,
         breed,
         health_status,
+        user_name,
+        user_role
       });
     } catch (error) {
       console.error("Erro ao carregar dashboard de animais:", error);
@@ -63,6 +76,8 @@ const adminController = {
   },
   async getVaccineDashboard(req, res) {
     try {
+      const user_name = (req.session.user.name).toUpperCase(); 
+      const user_role = (req.session.user.role).toUpperCase(); 
       const { search, type, target_disease, expiration_date } = req.query;
   
       const vaccines = await vaccinesService.getFilteredVaccines({
@@ -77,7 +92,9 @@ const adminController = {
         search,
         type,
         target_disease,
-        expiration_date
+        expiration_date,
+        user_name,
+        user_role
       });
   
     } catch (error) {
@@ -87,6 +104,8 @@ const adminController = {
   },
   async getApplicationDashboard(req, res) {
     try {
+      const user_name = (req.session.user.name).toUpperCase(); 
+      const user_role = (req.session.user.role).toUpperCase(); 
       const vaccines = await vaccinesService.getAllVaccines(); 
       const animals = await animalsService.getAllAnimals();
       const veterinarios = await vetService.getAllVets(); 
@@ -110,7 +129,9 @@ const adminController = {
         vaccines,
         animals,
         veterinarios,
-        query: req.query
+        query: req.query,
+        user_name,
+        user_role
       });
   
     } catch (error) {
