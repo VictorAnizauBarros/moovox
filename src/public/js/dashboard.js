@@ -1,22 +1,31 @@
 window.addEventListener("load", () => {
-    const loading = document.getElementById("loading-screen");
-  
-    if (loading) {
-      const hasLoggedIn = sessionStorage.getItem("hasLoggedIn");
-      const delay = hasLoggedIn ? 300 : 3000;
-  
-      sessionStorage.setItem("hasLoggedIn", "true");
-  
-      setTimeout(() => {
-        loading.classList.add("fade-out");
-  
-        // Aguarda a transição terminar antes de esconder
-        setTimeout(() => {
-          loading.style.display = "none";
-        }, 600); // mesmo valor do transition no CSS
-      }, delay);
+  const loading = document.getElementById("loading-screen");
+  const cowSound = document.getElementById("cow-sound");
+
+  if (loading) {
+    const hasLoggedIn = sessionStorage.getItem("hasLoggedIn");
+    const delay = hasLoggedIn ? 300 : 3000;
+
+    if (!hasLoggedIn && cowSound) {
+      // Toca o som de vaca se for a primeira vez
+      cowSound.play().catch(err => {
+        // Caso o navegador bloqueie autoplay, exibe no console
+        console.warn("Autoplay bloqueado:", err);
+      });
     }
-  });
+
+    sessionStorage.setItem("hasLoggedIn", "true");
+
+    setTimeout(() => {
+      loading.classList.add("fade-out");
+
+      setTimeout(() => {
+        loading.style.display = "none";
+      }, 600);
+    }, delay);
+  }
+});
+
   
   document.addEventListener("DOMContentLoaded", () => {
     // Centraliza o mapa em uma coordenada fictícia

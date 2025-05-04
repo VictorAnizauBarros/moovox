@@ -4,7 +4,8 @@ const router = express.Router();
 
 // Importa o controlador de usuários
 const userController = require('../controllers/userController');
-const adminController = require('../controllers/adminController'); 
+const adminController = require('../controllers/adminController');
+const upload = require("../middlewares/upload");
 
 
 /**
@@ -30,8 +31,11 @@ router.get('/dashboard/admin', adminController.getAdminDashboard);
 router.get('/admin/users', adminController.getUsersDashboard);
 router.get('/admin/animals',adminController.getAnimalsDashboard);
 router.get('/admin/vaccines', adminController.getVaccineDashboard); 
-router.get('/admin/applications', adminController.getApplicationDashboard); 
+router.get('/admin/applications', adminController.getApplicationDashboard);
+router.get('/admin/profile', adminController.getProfileDashboard); 
 
+router.post("/admin/profile/photo", upload.single("profile_photo"), userController.updateProfilePhoto); 
+router.put("/admin/profile/:id", userController.updateUserProfile); 
 
 
 // Exporta o router para ser utilizado em outros módulos

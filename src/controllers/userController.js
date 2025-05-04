@@ -188,6 +188,41 @@ const userController = {
       });
     }
   },
+  async updateProfilePhoto(req,res){
+    try {
+      const user_id = parseInt(req.session.user.id); 
+      const photo_file = req.file;
+
+      if(!photo_file){
+        return res.status(400).send("nenhuma imagem enviada.");
+      }
+      const user = await userService.uploadProfilePhoto(user_id, photo_file.filename); 
+
+      res.redirect("/admin/profile");
+    } catch (error) {
+      return res.status(404).json({
+        message: "Erro ao atualizar foto de perfil",
+        error: error.message
+        });
+        
+      
+    }
+  }, 
+  async updateUserProfile(req,res){
+    try {
+      const user_id = parseInt(req.session.user.id);
+      const {name, email, password} = req.body;
+      const user = await userService.updateUserProfile(user_id,name,email,password); 
+      res.redirect("/admin/profile"); 
+      
+    } catch (error) {
+      return res.status(404).json({
+        message: "Erro ao atualizar perfil",
+        error: error.message
+        });
+      
+    }
+  }, 
 };
 
 // Exporta o controlador de usuário

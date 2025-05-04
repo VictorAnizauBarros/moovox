@@ -50,6 +50,7 @@ model User {
   email      String   @unique @db.VarChar(250)
   password   String   @db.VarChar(250)
   role       Role
+  profile_photo String? @default("/images/foto-perfil-padrao.jpg") 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
