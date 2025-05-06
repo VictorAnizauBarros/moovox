@@ -220,3 +220,7 @@
 .card .btn-success:hover {
   background-color: #218838;
 }
+
+.foto-perfil{
+  object-fit: cover; 
+}

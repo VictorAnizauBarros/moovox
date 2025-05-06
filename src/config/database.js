@@ -5,8 +5,6 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient({
   // Formata os erros de forma mais legível
   errorFormat: 'pretty',
-  // Define os níveis de log que devem ser exibidos
-  log: ['query', 'info', 'warn', 'error'],
 });
 
 // Exporta a instância do cliente Prisma para uso em outros módulos

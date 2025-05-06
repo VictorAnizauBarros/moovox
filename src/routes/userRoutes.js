@@ -4,7 +4,9 @@ const router = express.Router();
 
 // Importa o controlador de usuários
 const userController = require('../controllers/userController');
-const adminController = require('../controllers/adminController'); 
+const adminController = require('../controllers/adminController');
+const upload = require("../middlewares/upload");
+const ensureAdmin = require('../middlewares/authMiddleware'); 
 
 
 /**
@@ -26,12 +28,15 @@ router.put('/user/:id', userController.updateUser);
 // Deleta um usuário por ID
 router.delete('/user/:id', userController.deleteUser);
 
-router.get('/dashboard/admin', adminController.getAdminDashboard); 
-router.get('/admin/users', adminController.getUsersDashboard);
-router.get('/admin/animals',adminController.getAnimalsDashboard);
-router.get('/admin/vaccines', adminController.getVaccineDashboard); 
-router.get('/admin/applications', adminController.getApplicationDashboard); 
+router.get('/dashboard/admin', ensureAdmin, adminController.getAdminDashboard); 
+router.get('/admin/users', ensureAdmin, adminController.getUsersDashboard);
+router.get('/admin/animals', ensureAdmin, adminController.getAnimalsDashboard);
+router.get('/admin/vaccines', ensureAdmin, adminController.getVaccineDashboard); 
+router.get('/admin/applications', ensureAdmin, adminController.getApplicationDashboard);
+router.get('/admin/profile', ensureAdmin, adminController.getProfileDashboard); 
 
+router.post("/admin/profile/photo", upload.single("profile_photo"), userController.updateProfilePhoto); 
+router.put("/admin/profile/:id", userController.updateUserProfile); 
 
 
 // Exporta o router para ser utilizado em outros módulos

@@ -1,153 +1,133 @@
-const {PrismaClient} = require('@prisma/client'); 
-const {fakerPT_BR} = require('@faker-js/faker'); 
+// Importan instância do prisma para a interação com o banco de dados: 
+const prisma = require('../src/config/database'); 
+
+// Importa e instânciando o Faker para a geração de dados:
+const {fakerPT_BR} = require('@faker-js/faker');
 const faker = fakerPT_BR; 
 
+// Importa biblioteca para a criptografia da senha:
 const bcrypt = require('bcryptjs'); 
 
-const prisma = new PrismaClient(); 
+/**
+ * Gera dados fictícios de um usuário, como nome, email e papel no sistema.
+ * @param {string} role - Papel do usuário (ex: 'veterinario', 'fazendeiro', etc.)
+ * @returns {object} Dados do usuário
+ */
+function generateUserData(role){
+    const fullname = faker.person.fullName();
+    const username = fullname.toLowerCase()
+    .replace(/ /g, '.')
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+    const email = `${username}@moovox.com`;
 
-async function main() {
+    return {
+        name: fullname,
+        email, 
+        role,
+    };
+}; 
 
-    // Deleta todos os usuários que existirem: 
-    await prisma.user.deleteMany();
-    await prisma.animal.deleteMany();
-    await prisma.vaccine.deleteMany(); 
-    const users = []; 
+/**
+ * Cria usuários com base no papel (role) fornecido.
+ * Para o papel 'veterinario', também cria um registro associado na tabela de veterinários.
+ * @param {string} role - Papel do usuário
+ * @param {number} quantity - Quantidade de usuários a serem criados (este parâmetro não está sendo usado corretamente)
+ */
+async function createUserByRole(role,quantity){
+    for(let i = 0 ; i < quantity ; i++ ){
+        const userData = generateUserData(role);
+        const hashedPassword = await bcrypt.hash("123456", 8);
 
-    // Criação de fazendeiros
-    for(let i = 0 ; i < 3 ; i ++){
-        const fullName = faker.person.fullName();
-        const userName = fullName.toLowerCase().replace(/ /g, '.').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        const email = `${userName}@moovox.com`;
-
-        const hashedPassword = await bcrypt.hash('123456',10); 
-
-        const farmer = await prisma.user.create({
-            data:{
-                name: fullName, 
-                email: email, 
-                password: hashedPassword, 
-                role: 'fazendeiro'
-            },
-        }); 
-        users.push(farmer);
-    }
-    // Criação de funcionarios
-    for(let i = 0 ; i < 3 ; i ++){
-        const fullName = faker.person.fullName();
-        const userName = fullName.toLowerCase().replace(/ /g, '.').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        const email = `${userName}@moovox.com`;
-
-        const hashedPassword = await bcrypt.hash('123456',10); 
-
-        const employee = await prisma.user.create({
-            data:{
-                name: fullName, 
-                email: email, 
-                password: hashedPassword, 
-                role: 'funcionario'
-            },
-        }); 
-        users.push(employee);
-    }
-    // Criação de veterinarios
-    for(let i = 0 ; i < 3 ; i ++){
-        const fullName = faker.person.fullName();
-        const userName = fullName.toLowerCase().replace(/ /g, '.').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        const email = `${userName}@moovox.com`;
-
-        const hashedPassword = await bcrypt.hash('123456',10); 
-
-        const vet = await prisma.user.create({
-            data:{
-                name: fullName, 
-                email: email, 
-                password: hashedPassword, 
-                role: 'veterinario'
-            },
-        }); 
-        const veterinario = await prisma.veterinario.create({
+        const user = await prisma.user.create({
             data: {
-                user_id: vet.id,
-            }
-        }); 
-        users.push(vet);
+                ...userData, 
+                password: hashedPassword
+            },
+        });
+        
+        // Se o usuário for veterinário, cria também na tabela relacionada
+        if(role === "veterinario"){
+            await prisma.veterinario.create({
+                data:{
+                    user_id: user.id,
+                },
+            });
+        }
     }
+}
 
-    const emailAdmin = 'admin@moovox.com'; 
+/**
+ * Cria o usuário administrador, caso ele ainda não exista no banco de dados.
+ */
+async function createAdminIfNotExists(){
+    const email = "admin@moovox.com";
+    console.log("🔐 Verificando administrador...");
+    const existing_email = await prisma.user.findUnique({where: {email: email}});
 
-    const existingAdmin = await prisma.user.findUnique({
-        where: {email: emailAdmin},
-    }); 
-
-    if(!existingAdmin){
-        const hashedPassword = await bcrypt.hash('admin123', 8); 
-
+    if(!existing_email){
+        const hashedPassword = await bcrypt.hash('admin123', 8);
         await prisma.user.create({
-            data:{
-                name: "Administrador Moovox",
-                email: emailAdmin, 
-                password: hashedPassword, 
+            data: {
+                name: "Administrador Moovox", 
+                email, 
+                password: hashedPassword,
                 role: "admin"
             },
         });
-
-        console.log('Administrador criado com sucesso.'); 
+        console.log("✅ Administrador criado com sucesso.");
     }else{
-        console.log('Administrador já existe no sistema.')
+        console.log("ℹ️ Administrador já existe.");
     }
-
-    // Criação de animais:
-const animals = [];
-
-const nomesDeAnimais = [
-    'Mimosa', 'Tufão', 'Berrante', 'Estrela', 'Pingo', 'Bilu', 'Chico', 'Juju',
-    'Fubá', 'Nina', 'Zé do Pasto', 'Aurora', 'Luar', 'Bambina', 'Flor', 'Valente',
-    'Pretinha', 'Branquinha', 'Marrom', 'Manchada', 'Lua', 'Sol', 'Galocha',
-    'Coragem', 'Pituca', 'Lambreta', 'Zezinho', 'Linda', 'Pérola', 'Amora',
-    'Serena', 'Sabiá', 'Guri', 'Pantera', 'Xodó', 'Lelé', 'Mulata', 'Trovão',
-    'Raio', 'Gaspar', 'Dora', 'Rosinha', 'Teca', 'Dalila', 'Morgana', 'Belinha',
-    'Naná', 'Xuxa', 'Rubi', 'Diamante', 'Café', 'Chocolate', 'Creme', 'Canela',
-    'Caramelo', 'Castanha', 'Manteiga', 'Farofa', 'Bolacha', 'Mel', 'Abóbora',
-    'Cacau', 'Leitosa', 'Frida', 'Jade', 'Kiara', 'Pandora', 'Faísca', 'Brisa',
-    'Tempestade', 'Pipoca', 'Paçoca', 'Feijão', 'Arroz', 'Rapadura', 'Queijinha',
-    'Joaninha', 'Tatá', 'Bilu Tetéia', 'Firmina', 'Lindalva', 'Raimunda',
-    'Zefinha', 'Anastácia', 'Bezerra', 'Tainá', 'Índia', 'Chuvinha', 'Formiga',
-    'Cotinha', 'Sebastiana', 'Lobinha', 'Jurubeba', 'Gracinha', 'Rosada',
-    'Catarina', 'Solange', 'Gertrudes', 'Mariquinha', 'Rosângela'
-  ];
-
-const health_status = ['saudavel', 'doente', 'recuperacao'];
-const breeds = ['Nelore', 'Angus', 'Senepol', 'Brangus'];
-
-function getRandom(array) {
-  const index = Math.floor(Math.random() * array.length);
-  return array[index];
 }
 
-for (let i = 0; i < 10; i++) {
-  const name = getRandom(nomesDeAnimais);
-  const breed = getRandom(breeds);
-  const status = getRandom(health_status);
+/**
+ * Cria registros de animais aleatórios com nomes, raças e status de saúde variados.
+ * @param {number} quantity - Quantidade de animais a serem criados
+ */ 
+async function createRandomAnimals(quantity){
+    const nomes = [
+        'Mimosa', 'Tufão', 'Berrante', 'Estrela', 'Pingo', 'Bilu', 'Chico', 'Juju',
+        'Fubá', 'Nina', 'Zé do Pasto', 'Aurora', 'Luar', 'Bambina', 'Flor', 'Valente',
+        'Pretinha', 'Branquinha', 'Marrom', 'Manchada', 'Lua', 'Sol', 'Galocha',
+        'Coragem', 'Pituca', 'Lambreta', 'Zezinho', 'Linda', 'Pérola', 'Amora',
+        'Serena', 'Sabiá', 'Guri', 'Pantera', 'Xodó', 'Lelé', 'Mulata', 'Trovão',
+        'Raio', 'Gaspar', 'Dora', 'Rosinha', 'Teca', 'Dalila', 'Morgana', 'Belinha',
+        'Naná', 'Xuxa', 'Rubi', 'Diamante', 'Café', 'Chocolate', 'Creme', 'Canela',
+        'Caramelo', 'Castanha', 'Manteiga', 'Farofa', 'Bolacha', 'Mel', 'Abóbora',
+        'Cacau', 'Leitosa', 'Frida', 'Jade', 'Kiara', 'Pandora', 'Faísca', 'Brisa',
+        'Tempestade', 'Pipoca', 'Paçoca', 'Feijão', 'Arroz', 'Rapadura', 'Queijinha',
+        'Joaninha', 'Tatá', 'Bilu Tetéia', 'Firmina', 'Lindalva', 'Raimunda',
+        'Zefinha', 'Anastácia', 'Bezerra', 'Tainá', 'Índia', 'Chuvinha', 'Formiga',
+        'Cotinha', 'Sebastiana', 'Lobinha', 'Jurubeba', 'Gracinha', 'Rosada',
+        'Catarina', 'Solange', 'Gertrudes', 'Mariquinha', 'Rosângela'
+      ];
+    const health_status = ['saudavel', 'doente', 'recuperacao'];
+    const breeds = ['Nelore', 'Angus', 'Senepol', 'Brangus'];
 
-  const animal = await prisma.animal.create({
-    data: {
-      name: name,
-      species: 'bovino',
-      breed: breed,
-      age: Math.floor(Math.random() * 20) + 1,
-      weight: Math.floor(Math.random() * 4) + 15,
-      health_status: status,
+    const getRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    for(let i = 0 ; i < quantity ; i++){
+        await prisma.animal.create({
+            data: {
+                name: getRandom(nomes),
+                species: 'bovino',
+                breed: getRandom(breeds),
+                age: Math.floor(Math.random()*20) + 1,  
+                weight: Math.floor(Math.random()*4) + 15,
+                health_status: getRandom(health_status),
+            },
+        });
     }
-  });
-
-  animals.push(animal);
 }
 
-// Criação de vacinas: 
-await prisma.vaccine.createMany({
-    data: [
-        {
+/**
+ * Insere várias vacinas no banco de dados de uma só vez.
+ * Cada entrada contém dados relevantes sobre a vacina.
+ */
+async function createVaccines(){
+    await prisma.vaccine.createMany({
+        data: [{
             name: "Aftovac",
             target_disease: "Febre Aftosa", 
             type: "injetavel",
@@ -256,20 +236,54 @@ await prisma.vaccine.createMany({
             notes: "Previne doenças entéricas. Reforço anual recomendado."
         },
         
-        
-    ]
-
-    
-})
-
-
+        ]
+    })
 }
 
+/**
+ * Função principal responsável por:
+ * - Limpar dados antigos do banco
+ * - Criar usuários com diferentes papéis
+ * - Criar um administrador
+ * - Popular o banco com animais e vacinas
+ */
+async function main() {
+    console.log("🔄 Iniciando o processo de seed...");
+
+    console.log("🧹 Limpando dados existentes...");
+    // Remove dados anteriores para evitar duplicidades ou conflitos
+    await prisma.veterinario.deleteMany(); 
+    await prisma.user.deleteMany(); 
+    await prisma.animal.deleteMany(); 
+    await prisma.vaccine.deleteMany();
+    console.log("✅ Dados antigos removidos.");
+
+    // Criação de usuários por papel
+    await createUserByRole('fazendeiro', 3);
+    console.log(`✅ 3 fazendeiros criados.`);
+    await createUserByRole('veterinario', 3); 
+    console.log(`✅ 3 veterinários criados.`); 
+    await createUserByRole('funcionario', 3); 
+    console.log(`✅ 3 funcionários criados.`);  
+
+    // Criação do administrador (se necessário)
+    await createAdminIfNotExists();
+
+    // Criação de animais e vacinas
+    await createRandomAnimals(10);
+    console.log("✅ Animais criados.");
+    await createVaccines();
+    console.log("✅ Vacinas cadastradas.");
+
+    console.log("✅ Seed concluído com sucesso.");
+}
+
+// Execução da função principal com tratamento de erros e fechamento da conexão com o banco
 main()
-.catch((error) => {
-    console.log(error);
+.catch((err) => {
+    console.error("❌ Erro ao executar seed:", err);
     process.exit(1);
 })
-.finally(async()=>{
-    await prisma.$disconnect(); 
-})
+.finally(async() => {
+    await prisma.$disconnect();
+});

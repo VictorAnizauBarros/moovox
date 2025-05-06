@@ -7,8 +7,8 @@ const applicationService = require('../services/applicationService');
 const adminController = {
   async getAdminDashboard(req, res) {
     try {
-      const user_name = (req.session.user.name).toUpperCase(); 
-      const user_role = (req.session.user.role).toUpperCase(); 
+      const id = parseInt(req.session.user.id); 
+      const user = await userService.getUserById(id); 
       const totalUsers = await userService.countUsers(); 
       const totalAnimals = await animalsService.countAnimals();
       const pending_doses = await applicationService.countPendentApplication();
@@ -20,8 +20,7 @@ const adminController = {
         pending_doses,
         lastThreeUsers, 
         lasThreePendingDoses,
-        user_name, 
-        user_role, 
+        user
       });
     } catch (error) {
       console.log(error);
@@ -30,15 +29,14 @@ const adminController = {
   },
   async getUsersDashboard(req, res) {
     try {
-      const user_name = (req.session.user.name).toUpperCase(); 
-      const user_role = (req.session.user.role).toUpperCase(); 
+      const id = parseInt(req.session.user.id); 
+      const user = await userService.getUserById(id);  
       const { search, role } = req.query;
       const users = await userService.getAllUsers({ search, role });
       res.render("admin/users", { users,
         search,
         query: { role },
-        user_name,
-        user_role,
+        user
        });
     } catch (error) {
       console.log(error);
@@ -47,8 +45,8 @@ const adminController = {
   },
   async getAnimalsDashboard(req, res) {
     try {
-      const user_name = (req.session.user.name).toUpperCase(); 
-      const user_role = (req.session.user.role).toUpperCase(); 
+      const id = parseInt(req.session.user.id); 
+      const user = await userService.getUserById(id);  
       const { search, species, breed, health_status } = req.query;
   
       const filters = {
@@ -66,8 +64,7 @@ const adminController = {
         species,
         breed,
         health_status,
-        user_name,
-        user_role
+        user
       });
     } catch (error) {
       console.error("Erro ao carregar dashboard de animais:", error);
@@ -76,8 +73,8 @@ const adminController = {
   },
   async getVaccineDashboard(req, res) {
     try {
-      const user_name = (req.session.user.name).toUpperCase(); 
-      const user_role = (req.session.user.role).toUpperCase(); 
+      const id = parseInt(req.session.user.id); 
+      const user = await userService.getUserById(id); 
       const { search, type, target_disease, expiration_date } = req.query;
   
       const vaccines = await vaccinesService.getFilteredVaccines({
@@ -93,8 +90,7 @@ const adminController = {
         type,
         target_disease,
         expiration_date,
-        user_name,
-        user_role
+        user
       });
   
     } catch (error) {
@@ -104,8 +100,8 @@ const adminController = {
   },
   async getApplicationDashboard(req, res) {
     try {
-      const user_name = (req.session.user.name).toUpperCase(); 
-      const user_role = (req.session.user.role).toUpperCase(); 
+      const id = parseInt(req.session.user.id); 
+      const user = await userService.getUserById(id);  
       const vaccines = await vaccinesService.getAllVaccines(); 
       const animals = await animalsService.getAllAnimals();
       const veterinarios = await vetService.getAllVets(); 
@@ -130,13 +126,30 @@ const adminController = {
         animals,
         veterinarios,
         query: req.query,
-        user_name,
-        user_role
+        user
       });
   
     } catch (error) {
       console.log(error); 
       res.status(500).send({ message: "Internal server error" });
+    }
+  }, 
+  async getProfileDashboard(req,res){
+    try {
+      const id = parseInt(req.session.user.id); 
+      const user = await userService.getUserById(id); 
+      const user_name = (req.session.user.name).toUpperCase(); 
+      const user_role = (req.session.user.role).toUpperCase(); 
+
+      res.render("admin/profile", {
+        user,
+        user_name,
+        user_role,
+      }); 
+    } catch (error) {
+      console.log(error); 
+      res.status(500).send({message: "Internal Error"})
+      
     }
   }
 };

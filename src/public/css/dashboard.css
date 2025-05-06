@@ -3,6 +3,10 @@ body {
     overflow-x: hidden;
   }
 
+  .foto-perfil{
+    object-fit: cover; 
+  }
+
   .bg-leather-main {
     background-color: #465f0c;
     background-image: url('https://www.transparenttextures.com/patterns/football-no-lines.png');

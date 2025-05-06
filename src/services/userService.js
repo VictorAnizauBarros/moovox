@@ -242,7 +242,42 @@ const userService = {
       throw new Error("Erro ao buscar os últimos três usuários (service): " + error.message);
       
     }
-  }
+  }, 
+  async uploadProfilePhoto(id,filename){
+    try {
+      const photo = await prisma.user.update({
+        where: {id: id},
+        data: {
+          profile_photo: "/images/" + filename,
+        },
+      });
+      return photo
+    } catch (error) {
+      console.error(`Erro ao atualizar foto de perfil do usuário no service: ${error}`);
+      throw new Error("Erro ao atualizar foto de perfil do usuário (service): " + error.message)
+      
+    }
+  }, 
+  async updateUserProfile(id, name, email, newPassword) {
+    try {
+      const dataToUpdate = {
+        name,
+        email,
+        ...(newPassword && {
+          password: await bcrypt.hash(newPassword, 8),
+        }),
+      };
+  
+      const updatedUser = await prisma.user.update({
+        where: { id },
+        data: dataToUpdate,
+      });
+  
+      return updatedUser;
+    } catch (error) {
+      throw new Error('Erro ao atualizar perfil: ' + error.message);
+    }
+  }  
 };
 
 // Exportação do serviço de usuário
