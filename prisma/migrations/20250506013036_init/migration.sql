@@ -13,6 +13,15 @@ CREATE TABLE `User` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Veterinario` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `user_id` INTEGER NOT NULL,
+
+    UNIQUE INDEX `Veterinario_user_id_key`(`user_id`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Animal` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(100) NOT NULL,
@@ -21,7 +30,6 @@ CREATE TABLE `Animal` (
     `age` INTEGER NOT NULL,
     `weight` DOUBLE NOT NULL,
     `health_status` ENUM('saudavel', 'doente', 'recuperacao', 'falecido') NOT NULL,
-    `user_id` INTEGER NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -31,10 +39,28 @@ CREATE TABLE `Animal` (
 -- CreateTable
 CREATE TABLE `Vaccine` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `target_disease` VARCHAR(191) NOT NULL,
+    `type` ENUM('injetavel', 'oral', 'intranasal', 'transdermica', 'intramamaria', 'spray') NOT NULL,
+    `manufacturer` VARCHAR(191) NOT NULL,
+    `batch` VARCHAR(191) NOT NULL,
+    `expiration_date` VARCHAR(191) NOT NULL,
+    `required_doses` INTEGER NOT NULL,
+    `dosing_interval` INTEGER NOT NULL DEFAULT 0,
+    `notes` VARCHAR(191) NOT NULL DEFAULT 'Não há observações.',
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Application` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
     `animal_id` INTEGER NOT NULL,
-    `name` VARCHAR(100) NOT NULL,
-    `vaccinarion_date` DATE NOT NULL,
-    `next_dose` DATE NULL,
+    `vaccine_id` INTEGER NOT NULL,
+    `veterinario_id` INTEGER NOT NULL,
+    `application_date` VARCHAR(191) NOT NULL,
+    `next_application_date` VARCHAR(191) NULL,
+    `status` ENUM('pendente', 'aplicada', 'atrasada') NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
@@ -65,10 +91,16 @@ CREATE TABLE `Location` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
-ALTER TABLE `Animal` ADD CONSTRAINT `Animal_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Veterinario` ADD CONSTRAINT `Veterinario_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `User`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Vaccine` ADD CONSTRAINT `Vaccine_animal_id_fkey` FOREIGN KEY (`animal_id`) REFERENCES `Animal`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `Application` ADD CONSTRAINT `Application_animal_id_fkey` FOREIGN KEY (`animal_id`) REFERENCES `Animal`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Application` ADD CONSTRAINT `Application_vaccine_id_fkey` FOREIGN KEY (`vaccine_id`) REFERENCES `Vaccine`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Application` ADD CONSTRAINT `Application_veterinario_id_fkey` FOREIGN KEY (`veterinario_id`) REFERENCES `Veterinario`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Telemetry` ADD CONSTRAINT `Telemetry_animal_id_fkey` FOREIGN KEY (`animal_id`) REFERENCES `Animal`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
