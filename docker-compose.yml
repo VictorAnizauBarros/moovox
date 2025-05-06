@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: moovox
       MYSQL_USER: moovox_user
-      MYSQL_PASSWORD: senha123
+      MYSQL_PASSWORD: moovox132
     ports:
       - "3307:3306"
     volumes:
