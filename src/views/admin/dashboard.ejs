@@ -70,7 +70,7 @@
             <i class="bi bi-capsule-pill me-2"></i>Doses Pendendentes
           </div>
           <ul class="list-group list-group-flush">
-            <% lasThreePendingDoses.forEach(dose => { 
+            <% lastThreePendingDoses.forEach(dose => { 
               const parts = dose.application_date.split('-'); // [YYYY, MM, DD]
               const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
             %>

@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Importa o controlador de usuários
 const userController = require('../controllers/userController');
-const adminController = require('../controllers/adminController');
+const adminController = require('../controllers/adminDashboardController');
 const upload = require("../middlewares/upload");
 const ensureAdmin = require('../middlewares/authMiddleware'); 
 

@@ -1,141 +1,100 @@
 // Importa o serviço de animal para realizar operações no banco de dados
 const animalService = require("../services/animalService");
 
-// Define o controlador de animal, responsável por gerenciar as requisições relacionadas a animais
+// Objeto controller que agrupa todos os métodos relacionados à entidade Animal
 const animalController = {
 
-  // Método para buscar todos os animais
-  async getAllAnimals(req, res) {
-    try {
-      // Chama o serviço de animal para buscar todos os animais
-      const animals = await animalService.getAllAnimals();
-      // Retorna a resposta com os animais encontrados
-      return res.status(200).json({
-        message: "Animais encontrados com sucesso.",
-        data: animals,
-      });
-    } catch (error) {
-      // Registra o erro no console
-      console.error(error);
-      // Retorna a resposta com erro
-      return res.status(500).json({ message: "Erro ao buscar animais." });
-    }
-  },
-
-  // Método para buscar um animal por ID
-  async getAnimalById(req, res) {
-    try {
-      // Extrai o ID do animal da requisição
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "ID inválido." });
-      }
-      // Chama o serviço de animal para buscar o animal pelo ID
-      const animal = await animalService.getAnimalById(id);
-      // Verifica se o animal foi encontrado
-      if (!animal) {
-        // Retorna a resposta com erro
-        return res.status(404).json({
-          message: "Animal não encontrado",
-        });
-      }
-      // Retorna a resposta com o animal encontrado
-      return res.status(200).json({
-        message: "Animal encontrado com sucesso.",
-        data: animal,
-      });
-    } catch (error) {
-      // Registra o erro no console
-      console.error(error);
-      // Retorna a resposta com erro
-      return res.status(500).json({ message: "Erro ao procurar animal por id." });
-    }
-  },
-
-  // Método para criar um novo animal
+  /**
+   * Cria um novo animal no sistema com base nos dados recebidos da requisição.
+   *
+   * Valida os campos obrigatórios e converte os valores de idade e peso
+   * antes de chamar o serviço responsável pela criação no banco de dados.
+   *
+   * @async
+   * @function createAnimal
+   * @param {import('express').Request} req - Objeto da requisição HTTP contendo os dados do animal.
+   * @param {import('express').Response} res - Objeto da resposta HTTP usado para redirecionar ou retornar erro.
+   * @returns {Promise<void>} - Redireciona para o dashboard ou envia erro 400/500.
+   */
   async createAnimal(req, res) {
     try {
-      // Extrai os dados do animal da requisição
-      const { name, species, breed, age, weight, health_status} = req.body;
-      const idade = parseInt(age);
-      const peso = parseFloat(weight);
-      
+      const { name, species, breed, age, weight, health_status } = req.body;
 
       if (!name || !species || !breed || !age || !weight || !health_status) {
         return res.status(400).json({ message: "Todos os campos são obrigatórios." });
       }
-      // Chama o serviço de animal para criar o novo animal
-      const animal = await animalService.createAnimal(
-        name,
-        species,
-        breed,
-        idade,
-        peso, 
-        health_status
-      );
-      // Retorna a resposta com o animal criado
-      return res.redirect('/admin/animals'); 
+
+      const idade = parseInt(age);
+      const peso = parseFloat(weight);
+
+      await animalService.createAnimal(name, species, breed, idade, peso, health_status);
+
+      res.redirect("/admin/animals");
     } catch (error) {
-      // Registra o erro no console
-      console.error(error);
-      // Retorna a resposta com erro
-      return res.status(500).json({ message: "Erro ao criar animal" });
+      console.error("Erro ao criar animal:", error);
+      res.status(500).json({ message: "Erro ao criar animal" });
     }
   },
 
-  // Método para atualizar um animal existente
+  /**
+   * Atualiza os dados de um animal existente com base no ID informado.
+   *
+   * Valida o ID e os campos recebidos na requisição antes de atualizar
+   * os dados no banco via serviço.
+   *
+   * @async
+   * @function updateAnimal
+   * @param {import('express').Request} req - Objeto da requisição HTTP com ID e novos dados do animal.
+   * @param {import('express').Response} res - Objeto da resposta HTTP usado para redirecionar ou retornar erro.
+   * @returns {Promise<void>} - Redireciona ou envia erro 400/500.
+   */
   async updateAnimal(req, res) {
     try {
-      // Extrai o ID do animal da requisição
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "ID inválido." });
       }
-      // Extrai os dados do animal da requisição
+
       const { name, species, breed, age, weight, health_status, user_id } = req.body;
       const idade = parseInt(age);
       const peso = parseFloat(weight);
-      // Chama o serviço de animal para atualizar o animal
-      const animal = await animalService.updateAnimal(
-        id,
-        name,
-        species,
-        breed,
-        idade,
-        peso,
-        health_status,
-        user_id
-      );
-      // Retorna a resposta com o animal atualizado
-      return res.redirect('/admin/animals'); 
+
+      await animalService.updateAnimal(id, name, species, breed, idade, peso, health_status, user_id);
+
+      res.redirect("/admin/animals");
     } catch (error) {
-      // Registra o erro no console
-      console.error(error);
-      // Retorna a resposta com erro
-      return res.status(500).json({ message: "Erro ao atualizar animal" });
+      console.error("Erro ao atualizar animal:", error);
+      res.status(500).json({ message: "Erro ao atualizar animal" });
     }
   },
 
-  // Método para deletar um animal existente
+  /**
+   * Remove um animal do sistema com base no ID fornecido na URL.
+   *
+   * Valida o ID antes de chamar o serviço responsável pela exclusão no banco.
+   *
+   * @async
+   * @function deleteAnimal
+   * @param {import('express').Request} req - Objeto da requisição HTTP com o ID do animal a ser removido.
+   * @param {import('express').Response} res - Objeto da resposta HTTP usado para redirecionar ou retornar erro.
+   * @returns {Promise<void>} - Redireciona ou envia erro 400/500.
+   */
   async deleteAnimal(req, res) {
     try {
-      // Extrai o ID do animal da requisição
       const id = parseInt(req.params.id);
       if (isNaN(id)) {
         return res.status(400).json({ message: "ID inválido." });
       }
-      // Chama o serviço de animal para deletar o animal
+
       await animalService.deleteAnimal(id);
-      // Retorna a resposta com o animal deletado
-      return res.redirect('/admin/animals'); 
+
+      res.redirect("/admin/animals");
     } catch (error) {
-      // Registra o erro no console
-      console.error(error);
-      // Retorna a resposta com erro
-      return res.status(500).json({ message: "Erro ao deletar animal" });
+      console.error("Erro ao deletar animal:", error);
+      res.status(500).json({ message: "Erro ao deletar animal" });
     }
   },
 };
 
-// Exporta o controlador de animal
+// Exporta o controller para ser usado nas rotas
 module.exports = animalController;
