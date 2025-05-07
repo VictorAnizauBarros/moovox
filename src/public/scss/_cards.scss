@@ -1,0 +1,37 @@
+// Card styles and color variants
+
+.agro-card {
+  background-color: $color-agro-card-bg;
+  color: $color-agro-card-yellow-text;
+}
+
+.agro-card-green {
+  background-color: $color-agro-card-green-bg;
+  color: $color-agro-card-green-text;
+}
+
+.agro-card-yellow {
+  background-color: $color-agro-card-yellow-bg;
+  color: $color-agro-card-yellow-text;
+}
+
+.agro-card-red {
+  background-color: $color-agro-card-red-bg;
+  color: $color-agro-card-red-text;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.card p {
+  margin: 0;
+}
+
+.card-header {
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+}

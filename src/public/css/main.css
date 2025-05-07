@@ -1,0 +1,233 @@
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+  }
+  70% {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 15px rgba(231, 76, 60, 0);
+  }
+  100% {
+    transform: scale(0.9);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
+@keyframes pulse-heart {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+@keyframes heartbeat-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.pulse, .pulse-marker {
+  animation: pulse 2s infinite;
+}
+
+.heartbeat-pulse, .heartbeat-icon {
+  animation: heartbeat-pulse 2s infinite;
+}
+
+.pulse-heart, .heartbeat {
+  animation: pulse-heart 1.5s infinite;
+}
+
+.slide-in-left, .sidebar {
+  animation: slideInLeft 0.8s ease forwards;
+}
+
+.fade-in-up, h2, .card {
+  animation: fadeInUp 0.6s ease-in-out forwards;
+}
+
+.fade-in, .bg-leather-main {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.agro-card {
+  background-color: #6b4f3f;
+  color: #333333;
+}
+
+.agro-card-green {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+.agro-card-yellow {
+  background-color: #ffeb3b;
+  color: #333333;
+}
+
+.agro-card-red {
+  background-color: #c62828;
+  color: #ffffff;
+}
+
+.card-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.card p {
+  margin: 0;
+}
+
+.card-header {
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+}
+
+.foto-perfil {
+  object-fit: cover;
+}
+
+.bg-leather-main {
+  background-color: #465f0c;
+  background-image: url("https://www.transparenttextures.com/patterns/football-no-lines.png");
+  background-repeat: repeat;
+  background-size: auto;
+  color: #f2f2f2;
+  min-height: 100vh;
+}
+
+#loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #302617;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.6s ease;
+}
+
+#loading-screen.fade-out {
+  opacity: 0;
+}
+
+#loading-text {
+  color: #f2eee9;
+  font-size: 2rem;
+  font-weight: 600;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+.card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.fade-delay-1 {
+  animation-delay: 0.2s;
+}
+
+.fade-delay-2 {
+  animation-delay: 0.4s;
+}
+
+.fade-delay-3 {
+  animation-delay: 0.6s;
+}
+
+.fade-delay-4 {
+  animation-delay: 0.8s;
+}
+
+h2 {
+  color: #f2f2f2;
+}
+
+.list-group-item {
+  font-size: 0.95rem;
+  background-color: #5b442f;
+  color: #f2f2f2;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+.list-group-item:hover {
+  background-color: #7a5c44;
+}
+
+.pulse-marker {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  background: #e74c3c;
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
+}
+
+.telemetry-card {
+  background: #f8f9fa;
+  border-left: 5px solid #4caf50;
+  transition: transform 0.3s ease;
+}
+
+.heartbeat-icon {
+  color: #e53935;
+  font-size: 1.3rem;
+}
+
+.heartbeat {
+  color: #e53935;
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=main.css.map */
