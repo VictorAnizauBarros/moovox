@@ -1,0 +1,9 @@
+@use "sass:map";
+
+@function color-palette($map, $key) {
+  @if not map-has-key($map, $key) {
+    @warn "Chave `#{$key}` não encontrada no mapa";
+    @return null;
+  }
+  @return map-get($map, $key);
+}

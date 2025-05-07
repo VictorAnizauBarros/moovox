@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "sass": "sass src/public/scss/main.scss src/public/css/main.css --watch"
+    "sass": "sass --load-path=node_modules --load-path=src/public/scss src/public/scss/main.scss src/public/css/main.css --watch",
+    "start-dev": "concurrently \"npm run sass\" \"npm run dev\""
+
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -17,6 +19,7 @@
     "@faker-js/faker": "^9.7.0",
     "@prisma/client": "^6.5.0",
     "bcryptjs": "^3.0.2",
+    "bootstrap": "^5.3.6",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
@@ -28,6 +31,7 @@
     "prisma": "^6.5.0"
   },
   "devDependencies": {
+    "concurrently": "^9.1.2",
     "nodemon": "^3.1.9",
     "sass": "^1.66.1"
   }

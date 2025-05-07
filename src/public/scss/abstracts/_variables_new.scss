@@ -1,0 +1,51 @@
+@use "sass:map";
+
+// Fonts
+$font-family-base: 'Poppins', sans-serif;
+
+// Spacing
+$spacer: 1rem;
+$border-radius: 4px;
+
+// Color palettes
+$color-leather: (
+  main-bg: #465f0c,
+  main-text: #f2f2f2
+);
+
+$color-agro-card: (
+  light: (
+    bg: #6b4f3f,
+    green-bg: #2e7d32,
+    yellow-bg: #ffeb3b,
+    red-bg: #c62828,
+    text: #f2f2f2
+  ),
+  dark: (
+    bg: #3e2d21,
+    green-bg: #1b5e20,
+    yellow-bg: #fbc02d,
+    red-bg: #b71c1c,
+    text: #e0e0e0
+  )
+);
+
+$color-list-group: (
+  bg: #5b442f,
+  hover-bg: #7a5c44,
+  text: #f2f2f2
+);
+
+$color-telemetry-card: (
+  bg: #f8f9fa,
+  border: #4caf50
+);
+
+$color-status: (
+  heartbeat: #e53935,
+  warning: #ff9800,
+  success: #4caf50
+);
+
+// Theme mode variable
+$theme-mode: light !default; // Can be 'light' or 'dark'

@@ -1,0 +1,92 @@
+.ghost-modal .modal-content {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+}
+
+.ghost-modal .modal-header {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.ghost-modal .modal-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.ghost-modal .modal-body {
+  padding-top: 0;
+}
+
+.ghost-modal .form-control,
+.ghost-modal .form-select {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+.ghost-modal .form-control:focus,
+.ghost-modal .form-select:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 0.2rem rgba(108, 99, 255, 0.25);
+}
+
+.ghost-modal .modal-footer {
+  border-top: none;
+}
+
+.ghost-modal .btn-primary {
+  background-color: #6c63ff;
+  border-color: #6c63ff;
+}
+
+.ghost-modal .btn-primary:hover {
+  background-color: #584bd6;
+  border-color: #584bd6;
+}
+
+/* Aumenta a altura mínima das células do mês */
+.fc-daygrid-day-frame {
+  min-height: 100px; /* Aumente conforme necessário */
+  overflow: visible !important;
+}
+
+/* Permite que o texto apareça sem cortar */
+.fc-event-title,
+.fc-event-time {
+  white-space: normal;
+  overflow-wrap: break-word;
+  font-size: 0.85rem;
+}
+
+.fc-daygrid-event {
+  font-size: 0.75rem;
+  padding: 2px;
+}
+
+.card-header {
+  font-size: 1.1rem;
+}
+
+.card select,
+.card input {
+  border: 1px solid #ccc;
+}
+
+.card .btn-success {
+  font-weight: 600;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.card .btn-success:hover {
+  background-color: #218838;
+}
+
+.foto-perfil {
+  object-fit: cover;
+}

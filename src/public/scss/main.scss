@@ -1,4 +1,20 @@
-@import 'variables';
-@import 'animations';
-@import 'cards';
-@import 'utilities';
+// main.scss
+
+// 1. Abstracts
+@use "abstracts/variables_new" as vars;
+@use "abstracts/functions";
+@use "abstracts/mixins";
+
+// 2. Base
+@use "base/animations";
+
+// 3. Utilities
+@use "utilities/utilities_new";
+
+// 4. Components
+@use "components/cards";
+@use "components/users";
+
+// 5. Layout
+@use "layout/dashboard";
+@use "layout/login";

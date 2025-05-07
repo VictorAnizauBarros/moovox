@@ -1,0 +1,74 @@
+@use '../abstracts/variables_new' as vars;
+@use '../abstracts/mixins';
+@use 'sass:map';
+
+// Card base styles
+.agro-card {
+  font-family: vars.$font-family-base;
+  border-radius: vars.$border-radius;
+  padding: vars.$spacer;
+  margin-bottom: vars.$spacer;
+
+  @if vars.$theme-mode == light {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), bg);
+    color: mixins.color-palette(map.get(vars.$color-agro-card, light), text);
+  } @else {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, dark), bg);
+    color: mixins.color-palette(map.get(vars.$color-agro-card, dark), text);
+  }
+}
+
+// Color variants
+.agro-card-green {
+  @if vars.$theme-mode == light {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), green-bg);
+  } @else {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, dark), green-bg);
+  }
+}
+
+.agro-card-yellow {
+  @if vars.$theme-mode == light {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), yellow-bg);
+    color: #333333; // Dark text for better contrast
+  } @else {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, dark), yellow-bg);
+    color: #212121;
+  }
+}
+
+.agro-card-red {
+  @if vars.$theme-mode == light {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), red-bg);
+  } @else {
+    background-color: mixins.color-palette(map.get(vars.$color-agro-card, dark), red-bg);
+  }
+  color: white;
+}
+
+// Card components
+.card-header {
+  font-weight: 600;
+  font-size: vars.$spacer;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-bottom: none;
+  padding: vars.$spacer;
+}
+
+.card-subtitle {
+  font-size: vars.$spacer;
+  font-weight: 600;
+  margin-bottom: calc(vars.$spacer * 0.5);
+}
+
+.card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .agro-card {
+    padding: calc(vars.$spacer * 0.75);
+  }
+}

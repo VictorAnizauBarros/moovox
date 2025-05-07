@@ -1,7 +1,35 @@
-// Utility classes and global styles
+// _utilities_new_fixed.scss
 
+@use "sass:map";
+@use '../abstracts/variables_new' as vars;
+@use '../base/animations' as anim; // Using new animations file with mixins
+
+// Placeholders for reusable animations using mixins
+%fade-in {
+  @include anim.fadeIn();
+}
+
+%fade-in-up {
+  @include anim.fadeInUp();
+}
+
+%slide-in-left {
+  @include anim.slideInLeft();
+}
+
+// Mixin for base font
+@mixin font-base {
+  font-family: 'Poppins', sans-serif;
+}
+
+// Mixin for pulse animation
+@mixin pulse-animation($duration: 2s) {
+  @include anim.pulse($duration);
+}
+
+// Global styles using placeholders and mixins
 body {
-  font-family: $font-family-base;
+  @include font-base;
   overflow-x: hidden;
 }
 
@@ -10,13 +38,13 @@ body {
 }
 
 .bg-leather-main {
-  background-color: $color-leather-main-bg;
+  background-color: map.get(vars.$color-leather, main-bg);
   background-image: url('https://www.transparenttextures.com/patterns/football-no-lines.png');
   background-repeat: repeat;
   background-size: auto;
-  color: $color-leather-main-text;
+  color: map.get(vars.$color-leather, main-text);
   min-height: 100vh;
-  @extend .fade-in;
+  @extend %fade-in;
 }
 
 #loading-screen {
@@ -42,15 +70,15 @@ body {
   color: #f2eee9;
   font-size: 2rem;
   font-weight: 600;
-  animation: pulse 1.2s infinite ease-in-out;
+  @include pulse-animation(1.2s);
 }
 
 .sidebar {
-  @extend .slide-in-left;
+  @extend %slide-in-left;
 }
 
 .card {
-  @extend .fade-in-up;
+  @extend %fade-in-up;
   opacity: 0;
   transform: translateY(20px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -62,19 +90,19 @@ body {
 .fade-delay-4 { animation-delay: 0.8s; }
 
 h2 {
-  color: $color-leather-main-text;
-  @extend .fade-in-up;
+  color: map.get(vars.$color-leather, main-text);
+  @extend %fade-in-up;
 }
 
 .list-group-item {
   font-size: 0.95rem;
-  background-color: $color-list-group-bg;
-  color: $color-list-group-text;
+  background-color: map.get(vars.$color-list-group, bg);
+  color: map.get(vars.$color-list-group, text);
   border: none;
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: $color-list-group-hover-bg;
+    background-color: map.get(vars.$color-list-group, hover-bg);
   }
 }
 
@@ -85,23 +113,21 @@ h2 {
   background: #e74c3c;
   border-radius: 50%;
   box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
-  @extend .pulse;
+  @include pulse-animation();
 }
 
 .telemetry-card {
-  background: $color-telemetry-card-bg;
-  border-left: 5px solid $color-telemetry-card-border;
+  background: map.get(vars.$color-telemetry-card, bg);
+  border-left: 5px solid map.get(vars.$color-telemetry-card, border);
   transition: transform 0.3s ease;
 }
 
 .heartbeat-icon {
-  @extend .heartbeat-pulse;
-  color: $color-heartbeat;
+  color: map.get(vars.$color-status, heartbeat);
   font-size: 1.3rem;
 }
 
 .heartbeat {
-  color: $color-heartbeat;
+  color: map.get(vars.$color-status, heartbeat);
   font-weight: bold;
-  @extend .pulse-heart;
 }
