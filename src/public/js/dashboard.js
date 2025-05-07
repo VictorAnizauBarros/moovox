@@ -60,7 +60,11 @@ window.addEventListener("load", () => {
     }
   }
   // Garante o comportamento correto ao abrir o modal
-  document.addEventListener("DOMContentLoaded", function() {
-    checkRequiredDoses();
-  });
+document.addEventListener("DOMContentLoaded", function() {
+  // Only call checkRequiredDoses if a select element exists
+  const selectElement = document.querySelector('select');
+  if (selectElement) {
+    checkRequiredDoses(selectElement);
+  }
+});
 
