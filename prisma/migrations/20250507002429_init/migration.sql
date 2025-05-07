@@ -5,6 +5,7 @@ CREATE TABLE `User` (
     `email` VARCHAR(250) NOT NULL,
     `password` VARCHAR(250) NOT NULL,
     `role` ENUM('admin', 'fazendeiro', 'veterinario', 'funcionario') NOT NULL,
+    `profile_photo` VARCHAR(191) NULL DEFAULT '/images/foto-perfil-padrao.jpg',
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updated_at` DATETIME(3) NOT NULL,
 
