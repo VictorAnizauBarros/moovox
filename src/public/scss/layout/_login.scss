@@ -1,5 +1,7 @@
+@use '../abstracts/variables_new' as vars;
+
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: vars.$font-family-base;
   background-color: #6d960e;
   background-image: url('https://www.transparenttextures.com/patterns/football-no-lines.png');
   background-size: cover;

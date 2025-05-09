@@ -1,5 +1,6 @@
 @use '../abstracts/variables_new' as vars;
-@use '../abstracts/mixins';
+@use '../abstracts/mixins' as *;
+@use '../components/cards' as cards;
 @use 'sass:map';
 
 // Base layout
@@ -19,7 +20,7 @@ body {
   background-size: auto;
   color: map.get(vars.$color-leather, main-text);
   min-height: 100vh;
-  @include mixins.fade-in; // Se você mover isso para um mixin
+  @include fade-in; // Use mixin from abstracts/_scss
 }
 
 // Loading screen
@@ -46,17 +47,17 @@ body {
   color: #f2eee9;
   font-size: 2rem;
   font-weight: 600;
-  @include mixins.pulse-animation(1.2s);
+  @include pulse-animation(1.2s);
 }
 
 // Sidebar animation
 .sidebar {
-  @include mixins.slide-in-left;
+  @include slide-in-left;
 }
 
 // Card animation
 .card {
-  @include mixins.fade-in-up;
+  @include fade-in-up;
   opacity: 0;
   transform: translateY(20px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -68,23 +69,19 @@ body {
 .fade-delay-4 { animation-delay: 0.8s; }
 
 .agro-card {
-  background-color: map.get(vars.$color-agro-card, light, bg);
-  color: map.get(vars.$color-agro-card, light, text);
+  @include cards.agro-card;
 }
 
 .agro-card-green {
-  background-color: map.get(vars.$color-agro-card, light, green-bg);
-  color: #fff;
+  @include cards.agro-card-green;
 }
 
 .agro-card-yellow {
-  background-color: map.get(vars.$color-agro-card, light, yellow-bg);
-  color: #333;
+  @include cards.agro-card-yellow;
 }
 
 .agro-card-red {
-  background-color: map.get(vars.$color-agro-card, light, red-bg);
-  color: #fff;
+  @include cards.agro-card-red;
 }
 
 // Card details
@@ -99,7 +96,7 @@ body {
 
 h2 {
   color: map.get(vars.$color-leather, main-text);
-  @include mixins.fade-in-up;
+  @include fade-in-up;
 }
 
 .card-header {
@@ -130,7 +127,7 @@ h2 {
   background: #e74c3c;
   border-radius: 50%;
   box-shadow: 0 0 0 rgba(231, 76, 60, 0.4);
-  @include mixins.pulse-animation(2s);
+  @include pulse-animation(2s);
 }
 
 .telemetry-card {

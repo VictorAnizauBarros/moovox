@@ -1,25 +1,52 @@
 @use "sass:map";
+@use '../base/animations' as anim;
+
+// Removed duplicate animation keyframes and mixins to consolidate in base/_animations.scss
+
+// Removed pulse keyframes and pulse-animation mixin from here
 
 @mixin font-base {
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  @mixin pulse-animation($duration: 2s) {
-    animation: pulse $duration infinite;
-  }
+  font-family: 'Poppins', sans-serif;
+}
 
-  @mixin fade-in {
-    animation: fadeIn 1s ease-in-out;
-  }
+@mixin fade-in {
+  animation: fadeIn 1s ease-in-out;
+}
 
-  @mixin slide-in-left {
-    animation: slideInLeft 0.8s ease forwards;
-  }
+@mixin slide-in-left {
+  animation: slideInLeft 0.8s ease forwards;
+}
 
-  @mixin fade-in-up {
-    animation: fadeInUp 0.6s ease-in-out forwards;
-  }
+@mixin fade-in-up {
+  animation: fadeInUp 0.6s ease-in-out forwards;
+}
 
-  @function color-palette($color-map, $key) {
-    @return map.get($color-map, $key);
-  }
+@mixin pulse-animation($duration: 2s) {
+  @include anim.pulse($duration);
+}
+
+@mixin agro-card {
+  // estilos da classe agro-card
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  // etc...
+}
+
+@mixin agro-card-green {
+  background-color: green;
+  color: white;
+}
+
+@mixin agro-card-yellow {
+  background-color: yellow;
+  color: black;
+}
+
+@mixin agro-card-red {
+  background-color: red;
+  color: white;
+}
+
+@function color-palette($color-map, $key) {
+  @return map.get($color-map, $key);
+}

@@ -3,7 +3,7 @@
 @use 'sass:map';
 
 // Card base styles
-.agro-card {
+@mixin agro-card {
   font-family: vars.$font-family-base;
   border-radius: vars.$border-radius;
   padding: vars.$spacer;
@@ -19,7 +19,7 @@
 }
 
 // Color variants
-.agro-card-green {
+@mixin agro-card-green {
   @if vars.$theme-mode == light {
     background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), green-bg);
   } @else {
@@ -27,17 +27,17 @@
   }
 }
 
-.agro-card-yellow {
+@mixin agro-card-yellow {
   @if vars.$theme-mode == light {
     background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), yellow-bg);
-    color: #333333; // Dark text for better contrast
+    color: #333333;
   } @else {
     background-color: mixins.color-palette(map.get(vars.$color-agro-card, dark), yellow-bg);
     color: #212121;
   }
 }
 
-.agro-card-red {
+@mixin agro-card-red {
   @if vars.$theme-mode == light {
     background-color: mixins.color-palette(map.get(vars.$color-agro-card, light), red-bg);
   } @else {

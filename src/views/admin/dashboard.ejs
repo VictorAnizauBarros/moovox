@@ -1,122 +1,131 @@
 <%- include('../partials/header', { title: "Dashboard - Moovox" }) %>
-<link rel="stylesheet" href="/css/main.css">
 
-<div id="loading-screen">
-  <div id="loading-text">Carregando Moovox...</div>
-</div>
-
-
-
-<div class="d-flex">
-  <%- include('../partials/sidebar') %>
-
-  <main class="flex-grow-1 p-4 bg-leather-main">
-    <h2 class="mb-4 text-white fw-bold">Painel do Administrador</h2>
-
-    <!-- Linha 1: Cards de resumo -->
-    <div class="row mb-4">
-      <div class="col-md-3">
-        <div class="card agro-card shadow-sm border-0 fade-delay-1">
-          <div class="card-body text-white">
-            <h6 class="card-subtitle mb-2"><i class="bi bi-people-fill me-2"></i>Usuários</h6>
-            <p class="display-6 fw-bold"><%= totalUsers%></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card agro-card-green shadow-sm border-0 fade-delay-2" >
-          <div class="card-body text-white">
-            <h6 class="card-subtitle mb-2"><i class="bi bi-piggy-bank-fill me-2"></i> Animais Registrados</h6>
-            <p class="display-6 fw-bold"><%= totalAnimals%></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card agro-card-yellow shadow-sm border-0 fade-delay-3" >
-          <div class="card-body text-dark">
-            <h6 class="card-subtitle mb-2"><i class="bi bi-capsule-pill me-2"></i>Doses Pendentes</h6>
-            <p class="display-6 fw-bold"><%= pending_doses%></p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card agro-card-red shadow-sm border-0 fade-delay-4">
-          <div class="card-body text-white">
-            <h6 class="card-subtitle mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Alertas de Saúde</h6>
-            <p class="display-6 fw-bold">5</p>
-          </div>
-        </div>
-      </div>
+  <div id="loading-screen">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <p class="loading-message">Carregando Moovox...</p>
     </div>
+  </div>
 
-    <!-- Linha 2: Últimos usuários e doses -->
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0 fade-delay-1">
-          <div class="card-header bg-dark text-white">
-            <i class="bi bi-person-lines-fill me-2"></i>Últimos Usuários Cadastrados
-          </div>
-          <ul class="list-group list-group-flush">
-            <% lastThreeUsers.forEach(user => { %>
-              <li class="list-group-item"><%= user.name %> - <%= user.role %></li>
-            <% }) %>
-          </ul>
-        </div>
-      </div>
+  <div class="d-flex">
+    <%- include('../partials/sidebar') %>
 
-      <div class="col-md-6">
-        <div class="card shadow-sm border-0 fade-delay-2">
-          <div class="card-header bg-dark text-white">
-            <i class="bi bi-capsule-pill me-2"></i>Doses Pendendentes
-          </div>
-          <ul class="list-group list-group-flush">
-            <% lasThreePendingDoses.forEach(dose => { 
-              const parts = dose.application_date.split('-'); // [YYYY, MM, DD]
-              const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-            %>
-              <li class="list-group-item">
-                <%= dose.animal.name %> - <%= formattedDate %>
-              </li>
-            <% }) %>
-          </ul>
-        </div>
-      </div>
-    </div>
+      <main class="flex-grow-1 p-4 bg-leather-main">
+        <h2 class="mb-4 text-white fw-bold">Painel do Administrador</h2>
 
-    <!-- Linha 3: Mapa e Telemetria -->
-    <div class="row">
-      <div class="col-md-6 mb-4">
-        <div class="card shadow-sm border-0 fade-delay-1">
-          <div class="card-header bg-dark text-white">
-            <i class="bi bi-geo-alt-fill me-2"></i>Localização dos Animais
+        <!-- Linha 1: Cards de resumo -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card agro-card shadow-sm border-0 fade-delay-1">
+              <div class="card-body text-white">
+                <h6 class="card-subtitle mb-2"><i class="bi bi-people-fill me-2"></i>Usuários</h6>
+                <p class="display-6 fw-bold">
+                  <%= totalUsers%>
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="card-body bg-light">
-            <div id="animal-map" style="height: 250px;" class="rounded"></div>
+          <div class="col-md-3">
+            <div class="card agro-card-green shadow-sm border-0 fade-delay-2">
+              <div class="card-body text-white">
+                <h6 class="card-subtitle mb-2"><i class="bi bi-piggy-bank-fill me-2"></i> Animais Registrados</h6>
+                <p class="display-6 fw-bold">
+                  <%= totalAnimals%>
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-
-      <div class="col-md-6 mb-4">
-        <div class="card shadow-sm border-0 telemetry-card fade-delay-2">
-          <div class="card-header bg-dark text-white d-flex align-items-center gap-2">
-            <i class="bi bi-activity heartbeat-icon"></i>
-            <strong>Telemetria do Animal</strong>
+          <div class="col-md-3">
+            <div class="card agro-card-yellow shadow-sm border-0 fade-delay-3">
+              <div class="card-body text-dark">
+                <h6 class="card-subtitle mb-2"><i class="bi bi-capsule-pill me-2"></i>Doses Pendentes</h6>
+                <p class="display-6 fw-bold">
+                  <%= pending_doses%>
+                </p>
+              </div>
+            </div>
           </div>
-          <div class="card-body text-secondary">
-            <p><strong><i class="fa-solid fa-cow me-2"></i>Animal:</strong> Branquinha</p>
-            <p><strong><i class="fa-solid fa-temperature-high me-2"></i>Temperatura Corporal:</strong> <span>38.5°C</span></p>
-            <p><strong><i class="fa-solid fa-heart-pulse me-2 heartbeat"></i>Frequência Cardíaca:</strong> <span>78 bpm</span></p>
-            <p><strong><i class="fa-solid fa-clock me-2"></i>Último Registro:</strong> 13/04/2025 às 15:42</p>
+          <div class="col-md-3">
+            <div class="card agro-card-red shadow-sm border-0 fade-delay-4">
+              <div class="card-body text-white">
+                <h6 class="card-subtitle mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>Alertas de Saúde</h6>
+                <p class="display-6 fw-bold">5</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      
-      </div>
-    </div>
-  </main>
-</div>
 
-<audio id="cow-sound" src="/sounds/vaca-mugindo.mp3" preload="auto"></audio>
-<script src="/js/dashboard.js"></script>
+        <!-- Linha 2: Últimos usuários e doses -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card shadow-sm border-0 fade-delay-1">
+              <div class="card-header bg-dark text-white">
+                <i class="bi bi-person-lines-fill me-2"></i>Últimos Usuários Cadastrados
+              </div>
+              <ul class="list-group list-group-flush">
+                <% lastThreeUsers.forEach(user=> { %>
+                  <li class="list-group-item">
+                    <%= user.name %> - <%= user.role %>
+                  </li>
+                  <% }) %>
+              </ul>
+            </div>
+          </div>
 
-<%- include('../partials/footer') %>
+          <div class="col-md-6">
+            <div class="card shadow-sm border-0 fade-delay-2">
+              <div class="card-header bg-dark text-white">
+                <i class="bi bi-capsule-pill me-2"></i>Doses Pendentes
+              </div>
+              <ul class="list-group list-group-flush">
+                <% lasThreePendingDoses.forEach(dose=> {
+                  const parts = dose.application_date.split('-'); // [YYYY, MM, DD]
+                  const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+                  %>
+                  <li class="list-group-item">
+                    <%= dose.animal.name %> - <%= formattedDate %>
+                  </li>
+                  <% }) %>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Linha 3: Mapa e Telemetria -->
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 fade-delay-1">
+              <div class="card-header bg-dark text-white">
+                <i class="bi bi-geo-alt-fill me-2"></i>Localização dos Animais
+              </div>
+              <div class="card-body bg-light">
+                <div id="animal-map" style="height: 250px;" class="rounded"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <div class="card shadow-sm border-0 telemetry-card fade-delay-2">
+              <div class="card-header bg-dark text-white d-flex align-items-center gap-2">
+                <i class="bi bi-activity heartbeat-icon"></i>
+                <strong>Telemetria do Animal</strong>
+              </div>
+              <div class="card-body text-secondary">
+                <p><strong><i class="fa-solid fa-cow me-2"></i>Animal:</strong> Branquinha</p>
+                <p><strong><i class="fa-solid fa-temperature-high me-2"></i>Temperatura Corporal:</strong>
+                  <span>38.5°C</span>
+                </p>
+                <p><strong><i class="fa-solid fa-heart-pulse me-2 heartbeat"></i>Frequência Cardíaca:</strong> <span>78
+                    bpm</span></p>
+                <p><strong><i class="fa-solid fa-clock me-2"></i>Último Registro:</strong> 13/04/2025 às 15:42</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+  </div>
+
+  <audio id="cow-sound" src="/sounds/vaca-mugindo.mp3" preload="auto"></audio>
+  <script src="/js/dashboard.js"></script>
+
+  <%- include('../partials/footer') %>

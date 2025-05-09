@@ -2,29 +2,34 @@ window.addEventListener("load", () => {
   const loading = document.getElementById("loading-screen");
   const cowSound = document.getElementById("cow-sound");
 
-  if (loading) {
-    const hasLoggedIn = sessionStorage.getItem("hasLoggedIn");
-    const delay = hasLoggedIn ? 300 : 3000;
+  if (!loading) return;
 
-    if (!hasLoggedIn && cowSound) {
-      // Toca o som de vaca se for a primeira vez
-      cowSound.play().catch(err => {
-        // Caso o navegador bloqueie autoplay, exibe no console
-        console.warn("Autoplay bloqueado:", err);
-      });
-    }
+  // Impede rolagem enquanto carrega
+  document.body.classList.add("loading-active");
 
-    sessionStorage.setItem("hasLoggedIn", "true");
+  const hasLoggedIn = sessionStorage.getItem("hasLoggedIn");
+  const delay = hasLoggedIn ? 300 : 3000;
 
-    setTimeout(() => {
-      loading.classList.add("fade-out");
-
-      setTimeout(() => {
-        loading.style.display = "none";
-      }, 600);
-    }, delay);
+  if (!hasLoggedIn && cowSound) {
+    cowSound.play().catch(err => {
+      console.warn("Autoplay bloqueado:", err);
+    });
   }
+
+  sessionStorage.setItem("hasLoggedIn", "true");
+
+  // Espera o tempo necessário, depois esconde o loader com fade-out
+  setTimeout(() => {
+    loading.classList.add("fade-out");
+
+    // Aguarda o fade terminar
+    setTimeout(() => {
+      loading.style.display = "none";
+      document.body.classList.remove("loading-active");
+    }, 500); // Bate com a duração da animação no CSS
+  }, delay);
 });
+
 
   
   document.addEventListener("DOMContentLoaded", () => {
@@ -67,4 +72,3 @@ document.addEventListener("DOMContentLoaded", function() {
     checkRequiredDoses(selectElement);
   }
 });
-

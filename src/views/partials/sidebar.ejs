@@ -1,9 +1,14 @@
 <!-- Sidebar com textura -->
 <div class="sidebar text-white p-3 min-vh-100 d-flex flex-column bg-agro-texture">
   <div class="text-center mb-4">
-    <img src="<%= user.profile_photo %>" alt="Foto do Usuário" class="rounded-circle mb-2 border border-light foto-perfil" width="80" height="80">
-    <h5 class="fw-bold"><%= user.name.toUpperCase() %></h5>
-    <span ><%= user.role.toUpperCase() %></span>
+    <img src="<%= user.profile_photo %>" alt="Foto do Usuário"
+      class="rounded-circle mb-2 border border-light foto-perfil" width="80" height="80">
+    <h5 class="fw-bold">
+      <%= user.name.toUpperCase() %>
+    </h5>
+    <span>
+      <%= user.role.toUpperCase() %>
+    </span>
   </div>
 
   <ul class="nav nav-pills flex-column mb-auto">
@@ -46,7 +51,7 @@
 
   <hr class="border-light">
   <div class="mt-auto text-center small ">
- 
+
     <span>&copy; 2025 - Moovox</span>
   </div>
 </div>
