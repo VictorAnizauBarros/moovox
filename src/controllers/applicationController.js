@@ -61,7 +61,7 @@ const applicationController = {
         parseInt(vaccine_id),
         parseInt(veterinario_id),
         application_date,
-        next_application_date|| null,
+        next_application_date || null,
         status
       );
       res.redirect('/admin/applications');
@@ -70,16 +70,16 @@ const applicationController = {
       res.status(404).json({ message: "Application not found" });
     }
   },
-  async deleteApplication(req,res){
+  async deleteApplication(req, res) {
     try {
-        const id = parseInt(req.params.id);
-        await applicationService.deleteApplication(id);
-        res.redirect('/admin/applications');
-        
+      const id = parseInt(req.params.id);
+      await applicationService.deleteApplication(id);
+      res.redirect('/admin/applications');
+
     } catch (error) {
-        console.error(error);
-        res.status(404).json({ message: "Application not found" });
-        
+      console.error(error);
+      res.status(404).json({ message: "Application not found" });
+
     }
   }
 };

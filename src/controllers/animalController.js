@@ -56,10 +56,10 @@ const animalController = {
   async createAnimal(req, res) {
     try {
       // Extrai os dados do animal da requisição
-      const { name, species, breed, age, weight, health_status} = req.body;
+      const { name, species, breed, age, weight, health_status } = req.body;
       const idade = parseInt(age);
       const peso = parseFloat(weight);
-      
+
 
       if (!name || !species || !breed || !age || !weight || !health_status) {
         return res.status(400).json({ message: "Todos os campos são obrigatórios." });
@@ -70,11 +70,11 @@ const animalController = {
         species,
         breed,
         idade,
-        peso, 
+        peso,
         health_status
       );
       // Retorna a resposta com o animal criado
-      return res.redirect('/admin/animals'); 
+      return res.redirect('/admin/animals');
     } catch (error) {
       // Registra o erro no console
       console.error(error);
@@ -107,7 +107,7 @@ const animalController = {
         user_id
       );
       // Retorna a resposta com o animal atualizado
-      return res.redirect('/admin/animals'); 
+      return res.redirect('/admin/animals');
     } catch (error) {
       // Registra o erro no console
       console.error(error);
@@ -127,7 +127,7 @@ const animalController = {
       // Chama o serviço de animal para deletar o animal
       await animalService.deleteAnimal(id);
       // Retorna a resposta com o animal deletado
-      return res.redirect('/admin/animals'); 
+      return res.redirect('/admin/animals');
     } catch (error) {
       // Registra o erro no console
       console.error(error);
