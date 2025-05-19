@@ -1,4 +1,6 @@
-// Importan instância do prisma para a interação com o banco de dados: 
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
+
+// Importa instância do prisma para a interação com o banco de dados:
 const prisma = require('../src/config/database'); 
 
 // Importa e instânciando o Faker para a geração de dados:
